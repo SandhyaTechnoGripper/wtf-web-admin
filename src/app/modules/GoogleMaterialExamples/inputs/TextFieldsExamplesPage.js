@@ -1,11 +1,13 @@
 /* eslint-disable no-restricted-imports */
-import React from "react";
+import React, { useState,useEffect } from 'react';
+import axios from 'axios';
 import clsx from "clsx";
 import {
   TextField,
   InputBase,
 
 } from "@material-ui/core";
+import { useHistory, useParams } from 'react-router-dom';
 import {green} from "@material-ui/core/colors";
 import {
   fade,
@@ -13,6 +15,7 @@ import {
   makeStyles,
   createMuiTheme
 } from "@material-ui/core/styles";
+
 
 import {Notice, KTCodeExample} from "../../../../_metronic/_partials/controls";
 import MenuItem from '@material-ui/core/MenuItem';
@@ -27,44 +30,18 @@ import Button from '@material-ui/core/Button';
 
 
 
+
 // Submit
 const useStyles3 = makeStyles(theme => ({
   button: {
     margin: theme.spacing(1),
-  },
+  }, 
   input: {
     display: 'none',
   },
 }));
 
 
-const currencies = [
-  {
-    value: 'Active',
-    label: 'Active',
-  },
-  {
-    value: 'Inactive',
-    label: 'Inactive',
-  },
-];
-// // update user
-// const useStyles3 = makeStyles(theme => ({
-//   container: {
-//     display: "flex",
-//     flexWrap: "wrap"
-//   },
-//   textField: {
-//     marginLeft: theme.spacing(1),
-//     marginRight: theme.spacing(1)
-//   },
-//   dense: {
-//     marginTop: theme.spacing(2)
-//   },
-//   menu: {
-//     width: 200
-//   }
-// }));
 
 //view user
 const useStyles4 = makeStyles(theme => ({
@@ -78,8 +55,13 @@ const useStyles4 = makeStyles(theme => ({
   },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+    
+   
+
+        
+
+function createData(name, email, mobile, account_type,status) {
+  return { name, email, mobile, account_type,status };
 }
 
 const rows = [
@@ -90,6 +72,9 @@ const rows = [
   createData('Gingerbread', 356, 16.0, 49, 3.9),
 ]
 // add user
+
+
+
 const useStyles2 = makeStyles(theme => ({
   container: {
     display: "flex",
@@ -108,56 +93,103 @@ const useStyles2 = makeStyles(theme => ({
 }));
 
 
+
+
 export default function TextFieldsExamplesPage() {
 
-  // //update user
-  // const classes3 = useStyles3();
-  // const [values3, setValues3] = React.useState({
-  //   name: "Cat in the Hat",
-  //   age: "",
-  //   multiline: "Controlled",
-  //   currency: "EUR"
-  // });
-
-  // const handleChange3 = name => event => {
-  //   setValues3({ ...values3, [name]: event.target.value });
-  // };
 // submit button
   const classes3 = useStyles3();
   //view user
-  const classes4 = useStyles4();
+  const classes4 = useStyles4(); 
+
+  const [getData, setGetData] = React.useState([])
+
+  // useEffect(() => {
+
+  //   fetch('http://13.232.102.139:9000/user/', {
+  //     method: "GET",
+  //     headers: { 'Content-Type': 'application/json', '' },
+  //   })
+  //   .then(response => response.json()) 
+  //   .then(data => printIt(data));
+  // }, []);
+  // const  printIt = (data) => {
+    
+  //   setView(data.data)
+  //   console.log(data.data)
+
+  // }
+  // console.log(view)
+  const fetchGetData = () =>{
+    fetch('http://13.232.102.139:9000/user/', {
+    method: 'GET',
+    headers: {
+    'Content-Type': 'application/json',
+    'Authrization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJiR3lQWEpBcDhZV1pOIiwibmFtZSI6Im1vaGl0IiwiaWF0IjoxNjI3MDQ2MDc1LCJleHAiOjE2MjcwNzEyNzV9.yhWEv984GE-hiv6LqR7oZjUFwf2WLBFFLjBS1niaNaE'
+    }
+    
+    })
+    .then(response => response.json())
+    .then(responseJson => {
+    setGetData(responseJson.data)
+    console.log('Success GetData :', responseJson);
+    
+    
+    })
+    
+    }
+
+    useEffect(() => {
+      fetchGetData();
+      }, []);
+
+console.log(getData)
   // add user
+
   const classes2 = useStyles2();
-  const [values2, setValues2] = React.useState({
-    name: "Cat in the Hat",
-    age: "",
-    multiline: "Controlled",
-    currency: "EUR"
-  });
-
-  const handleChange2 = name => event => {
-    setValues2({ ...values2, [name]: event.target.value });
-  };
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [password, setPassword] = useState("");
+  const [account_type,setAccount_type] = useState("");
+  
+  const history = useHistory();
 
 
-  return (
+
+  function Useradd(e){
+    e.preventDefault()
+    const postData ={
+      name,
+      email,
+      mobile,
+      password,
+      account_type
+      }
+
+    console.log(typeof postData);
+    console.log(postData)
+
+    
+
+      // POST request using fetch inside useEffect React hook
+      const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', },
+          body: JSON.stringify(postData)
+      };
+      fetch('http://13.232.102.139:9000/user/add', requestOptions)
+          .then(response => response.json())
+          .then(data => postData);
+     
+    }
+
+
+  return ( 
     <>
-      <Notice icon="flaticon-warning font-primary">
-        <span>Text fields let users enter and edit text.</span>{" "}
-        <span>
-          For more info please check the components's official{" "}
-          <a
-            target="_blank"
-            className="font-weight-bold"
-            rel="noopener noreferrer"
-            href="https://material-ui.com/components/text-fields/"
-          >
-            demos & documentation
-          </a>
-        </span>
-      </Notice>
+
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-3">
           <KTCodeExample
             jsCode={jsCode2}
             beforeCodeTitle="Add User"
@@ -167,22 +199,24 @@ export default function TextFieldsExamplesPage() {
               <code>TextField</code> supports outlined styling.
             </span>
             <div className="separator separator-dashed my-7"></div>
-            <form className={classes2.container} noValidate autoComplete="off">
+            <form className={classes2.container} noValidate autoComplete="off" >
               <TextField
                 id="outlined-name"
                 label="Name"
                 className={classes2.textField}
-                value={values2.name}
-                onChange={handleChange2("name")}
+                value={name}
+                onChange={(e)=> setName(e.target.value)}
                 margin="normal"
                 variant="outlined"
               />
 
               <TextField
-                error
+                
                 id="outlined-error"
-                label="Account type"
+                label="Account Type"
+                value={account_type}
                 className={classes2.textField}
+                onChange={(e)=> setAccount_type(e.target.value)}
                 margin="normal"
                 variant="outlined"
               />
@@ -192,34 +226,39 @@ export default function TextFieldsExamplesPage() {
                 label="Email"
                 className={classes2.textField}
                 type="email"
-                name="email"
+                value={email}
                 autoComplete="email"
                 margin="normal"
                 variant="outlined"
+                onChange={(e)=> setEmail(e.target.value)}
               />
               <TextField
                 id="outlined-password-input"
                 label="Password"
                 className={classes2.textField}
                 type="password"
+                value={password}
                 autoComplete="current-password"
                 margin="normal"
                 variant="outlined"
+                onChange={(e)=> setPassword(e.target.value)}
               />
               <TextField
                 id="outlined-read-only-input"
                 label="Phone"
                 type= "number"
+                value={mobile}
                 className={classes2.textField}
                 margin="normal"
                 variant="outlined"
+                onChange={(e)=> setMobile(e.target.value)}
               />
-              <TextField
+              {/* <TextField
                 id="outlined-select-currency"
                 select
-                label="Select"
+                label="Status"
                 className={classes2.textField}
-                value={values2.currency}
+                value={users.currency}
                 onChange={handleChange2("currency")}
                 SelectProps={{
                   MenuProps: {
@@ -234,8 +273,9 @@ export default function TextFieldsExamplesPage() {
                     {option.label}
                   </MenuItem>
                 ))}
-              </TextField>
-              <Button variant="contained" className={classes3.button}>
+              </TextField> */}
+              <Button variant="contained" className={classes3.button} onClick ={Useradd}>
+
                 Submit
               </Button>
             </form>
@@ -243,7 +283,7 @@ export default function TextFieldsExamplesPage() {
           </KTCodeExample>
         </div>
 
-        <div className="col-md-8">
+        <div className="col-md-9">
         <KTCodeExample
             jsCode={jsCode4}
             beforeCodeTitle="View User"
@@ -258,21 +298,31 @@ export default function TextFieldsExamplesPage() {
                   <TableCell align="right">Email</TableCell>
                   <TableCell align="right">Phone</TableCell>
                   <TableCell align="right">Status</TableCell>
+                  <TableCell align="centre">Action</TableCell>
+                  
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {rows.map(row => (
+              {/* <TableBody>
+                {getData.map(row => (
                   <TableRow key={row.name}>
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell align="right">{row.account_type}</TableCell>
+                    <TableCell align="right">{row.email}</TableCell>
+                    <TableCell align="right">{row.mobile}</TableCell>
+                    <TableCell align="right">{row.status}</TableCell>
+                    <TableCell allign="right">
+                    <Button >
+                    <i class="fa fa-edit"></i>
+                    </Button>
+                    <Button>
+                    <i class="fa fa-trash"   ></i>
+                    </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
-              </TableBody>
+              </TableBody> */}
             </Table>
           </Paper>
           </KTCodeExample>

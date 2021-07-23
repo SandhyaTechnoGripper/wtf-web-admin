@@ -17,6 +17,7 @@ export function login(username, password) {
   })
   .then((myJson) => {
     let t = myJson.data;
+    
     localStorage.setItem("token", t);
     return t;
     // console.log(myJson.status)

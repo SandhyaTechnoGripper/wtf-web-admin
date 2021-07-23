@@ -21,12 +21,13 @@ import { login } from "../_redux/authCrud";
 */
 
 const initialValues = {
-  email: "admin@demo.com",
-  password: "demo",
+  email: "mohit@email.com",
+  password: "mohit",
 };
 
 
 const data = localStorage.getItem("token");
+console.log(data)
 
 function Login(props) {
 

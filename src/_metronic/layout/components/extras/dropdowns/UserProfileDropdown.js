@@ -35,11 +35,11 @@ export function UserProfileDropdown() {
             Hi,
           </span>{" "}
           <span className="text-white opacity-90 font-weight-bolder font-size-base d-none d-md-inline mr-4">
-            {user.firstname} {user.lastname}
+            { user?.name}
           </span>
           <span className="symbol symbol-35">
             <span className="symbol-label text-white font-size-h5 font-weight-bold bg-white-o-30">
-              {user.firstname[0]}
+              {user?.name}
             </span>
           </span>
         </div>
