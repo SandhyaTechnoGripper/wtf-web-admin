@@ -80,10 +80,11 @@ function Login(props) {
       enableLoading();
       setTimeout(() => {
         login(values.email, values.password)
-          .then(({ data: { x } }) => {
+          .then(({token, ...rest}) => {
             disableLoading();
-
-            props.login(x);
+            console.log("datadatadatadatadata", data);
+            props.login(token);
+            props.setUser(rest);
           })
           .catch(() => {
             setStatus(
