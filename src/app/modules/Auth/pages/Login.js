@@ -79,8 +79,9 @@ function Login(props) {
         login(values.email, values.password)
           .then(({token, ...rest}) => {
             disableLoading();
-            props.setUser(rest);
+            console.log("datadatadatadatadata", data);
             props.login(token);
+            props.setUser(rest);
           })
           .catch(() => {
             setStatus(
