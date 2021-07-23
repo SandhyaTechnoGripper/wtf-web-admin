@@ -16,13 +16,14 @@ export function login(username, password) {
     return response.json();
   })
   .then((myJson) => {
-    let t = myJson.data.token;
+    let t = myJson.data;
     localStorage.setItem("token", t);
-    console.log(myJson.status)
-    if (myJson.status== true){
-      console.log("true")
-      window.location = "/users"
-    }
+    return t;
+    // console.log(myJson.status)
+    // if (myJson.status== true){
+    //   console.log("true")
+    //   window.location = "/users"
+    // }
   });
 
   return val
