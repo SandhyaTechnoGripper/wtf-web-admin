@@ -7,6 +7,9 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
 import { login } from "../_redux/authCrud";
 
+
+
+
 /*
   INTL (i18n) docs:
   https://github.com/formatjs/react-intl/blob/master/docs/Components.md#formattedmessage
