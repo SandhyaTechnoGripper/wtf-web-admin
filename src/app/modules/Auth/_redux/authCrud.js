@@ -1,12 +1,31 @@
 import axios from "axios";
 
-export const LOGIN_URL = 'http://13.232.102.139:9000/user/login/auth/login';
+export const LOGIN_URL = 'http://13.232.102.139:9000/user/login';
 export const REGISTER_URL = "api/auth/register";
 export const REQUEST_PASSWORD_URL = "api/auth/forgot-password";
 export const ME_URL = `${process.env.REACT_APP_API_URL}/auth/me`;
 
-export function login(email, password) {
-  return axios.post(LOGIN_URL, { email, password });
+export function login(username, password) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', },
+    body: JSON.stringify({"username":username, "password":password})
+};
+  const val = fetch(LOGIN_URL, requestOptions)
+  .then((response) => {
+    return response.json();
+  })
+  .then((myJson) => {
+    let t = myJson.data.token;
+    localStorage.setItem("token", t);
+    console.log(myJson.status)
+    if (myJson.status== true){
+      console.log("true")
+      window.location = "/users"
+    }
+  });
+
+  return val
 }
 
 export function register(email, fullname, username, password) {

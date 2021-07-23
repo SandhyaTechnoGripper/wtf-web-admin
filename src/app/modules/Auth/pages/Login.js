@@ -22,7 +22,12 @@ const initialValues = {
   password: "demo",
 };
 
+
+const data = localStorage.getItem("token");
+
 function Login(props) {
+
+
   const { intl } = props;
   const [loading, setLoading] = useState(false);
   const LoginSchema = Yup.object().shape({
@@ -72,10 +77,10 @@ function Login(props) {
       enableLoading();
       setTimeout(() => {
         login(values.email, values.password)
-          .then(({ data: { authToken } }) => {
+          .then(({ data: { x } }) => {
             disableLoading();
 
-            props.login(authToken);
+            props.login(x);
           })
           .catch(() => {
             setStatus(
