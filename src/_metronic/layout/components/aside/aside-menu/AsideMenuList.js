@@ -32,7 +32,7 @@ export function AsideMenuList({ layoutProps }) {
         {/*end::1 Level*/}
 
         {/*begin::1 Level*/}
-        <li
+        {/* <li
           className={`menu-item ${getMenuItemActive("/builder", false)}`}
           aria-haspopup="true"
         >
@@ -42,15 +42,15 @@ export function AsideMenuList({ layoutProps }) {
             </span>
             <span className="menu-text">Layout Builder</span>
           </NavLink>
-        </li>
+        </li> */}
         {/*end::1 Level*/}
 
         {/* Components */}
         {/* begin::section */}
-        <li className="menu-section ">
+        {/* <li className="menu-section ">
           <h4 className="menu-text">Components</h4>
           <i className="menu-icon flaticon-more-v2"></i>
-        </li>
+        </li> */}
         {/* end:: section */}
 
         {/* Material-UI */}
@@ -75,7 +75,7 @@ export function AsideMenuList({ layoutProps }) {
             <ul className="menu-subnav">
               <li className="menu-item  menu-item-parent" aria-haspopup="true">
                 <span className="menu-link">
-                  <span className="menu-text">Material UI</span>
+                  <span className="menu-text">Management</span>
                 </span>
               </li>
 
@@ -96,7 +96,7 @@ export function AsideMenuList({ layoutProps }) {
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
                   </i>
-                  <span className="menu-text">Inputs</span>
+                  <span className="menu-text">Management</span>
                   <i className="menu-arrow" />
                 </NavLink>
                 <div className="menu-submenu ">
@@ -105,18 +105,19 @@ export function AsideMenuList({ layoutProps }) {
                     {/*begin::3 Level*/}
                     <li
                       className={`menu-item  ${getMenuItemActive(
-                        "/google-material/inputs/autocomplete"
+                        "/google-material/inputs/switches"
+                        
                       )}`}
                       aria-haspopup="true"
                     >
                       <NavLink
                         className="menu-link"
-                        to="/google-material/inputs/autocomplete"
+                        to="/google-material/inputs/switches"
                       >
                         <i className="menu-bullet menu-bullet-dot">
                           <span />
                         </i>
-                        <span className="menu-text">Autocomplete</span>
+                        <span className="menu-text">GYM Management</span>
                       </NavLink>
                     </li>
                     {/*end::3 Level*/}
@@ -135,7 +136,7 @@ export function AsideMenuList({ layoutProps }) {
                         <i className="menu-bullet menu-bullet-dot">
                           <span />
                         </i>
-                        <span className="menu-text">Buttons</span>
+                        <span className="menu-text">EquipmentManagement</span>
                       </NavLink>
                     </li>
                     {/*end::3 Level*/}
@@ -249,7 +250,7 @@ export function AsideMenuList({ layoutProps }) {
                         <i className="menu-bullet menu-bullet-dot">
                           <span />
                         </i>
-                        <span className="menu-text">Text Fields</span>
+                        <span className="menu-text">Addons Management</span>
                       </NavLink>
                     </li>
                     {/*end::3 Level*/}

@@ -79,12 +79,12 @@ export function SubHeader() {
 
         {/* Toolbar */}
         <div className="d-flex align-items-center">
-          <button
+          {/* <button
             type="button"
             className="btn btn-transparent-white font-weight-bold  py-3 px-6 mr-4"
           >
             Reports
-          </button>
+          </button> */}
           <QuickActions />
         </div>
       </div>

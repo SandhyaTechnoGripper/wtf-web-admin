@@ -26,6 +26,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import GoogleMaterialPage from '../GoogleMaterialPage';
 
 
 
@@ -302,7 +303,7 @@ console.log(getData)
                   
                 </TableRow>
               </TableHead>
-              {/* <TableBody>
+              <TableBody>
                 {getData.map(row => (
                   <TableRow key={row.name}>
                     <TableCell component="th" scope="row">
@@ -322,7 +323,7 @@ console.log(getData)
                     </TableCell>
                   </TableRow>
                 ))}
-              </TableBody> */}
+              </TableBody>
             </Table>
           </Paper>
           </KTCodeExample>
