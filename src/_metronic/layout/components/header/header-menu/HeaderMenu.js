@@ -33,7 +33,7 @@ export function HeaderMenu({ layoutProps }) {
                 data-menu-toggle={layoutProps.menuDesktopToggle}
                 aria-haspopup="true"
                 className={`menu-item  menu-item-rel ${getMenuItemActive('/google-material')}`}>
-                <NavLink className="menu-link " to="/google-material/inputs/text-fields">
+                <NavLink className="menu-link " to="/allusers">
                     <span className="menu-text">User Management</span>
                     <i className="menu-arrow"></i>
                 </NavLink>
@@ -47,7 +47,7 @@ export function HeaderMenu({ layoutProps }) {
                 data-menu-toggle={layoutProps.menuDesktopToggle}
                 aria-haspopup="true"
             >
-                <NavLink className="menu-link " to="/google-material/inputs/Switches">
+                <NavLink className="menu-link " to="/gym">
                     <span className="menu-text">Gym Management</span>
                     <i className="menu-arrow"></i>
                 </NavLink>
@@ -316,7 +316,7 @@ export function HeaderMenu({ layoutProps }) {
                 data-menu-toggle={layoutProps.menuDesktopToggle}
                 aria-haspopup="true"
                 className={`menu-item menu-item-rel ${getMenuItemActive('/google-material/inputs/buttons')}`}>
-                <NavLink className="menu-link " to="/google-material/inputs/transfer-list">
+                <NavLink className="menu-link " to="/trainer">
                     <span className="menu-text">Trainer Management</span>
                     <i className="menu-arrow"></i>
                 </NavLink>

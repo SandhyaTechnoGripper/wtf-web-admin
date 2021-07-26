@@ -46,18 +46,9 @@ export function InputsPage() {
         path="/google-material/inputs/selects"
         component={SelectsExamplesPage}
       />
-      <ContentRoute
-        path="/google-material/inputs/switches"
-        component={TransferListExamplesPage}
-      />
-      <ContentRoute
-        path="/google-material/inputs/text-fields"
-        component={TextFieldsExamplesPage}
-      />
-      <ContentRoute
-        path="/google-material/inputs/transfer-list"
-        component={TrainerManagement}
-      />
+      <ContentRoute path="/gym" component={TransferListExamplesPage} />
+      <ContentRoute path="/user" component={TextFieldsExamplesPage} />
+      <ContentRoute path="/trainer" component={TrainerManagement} />
 
       <ContentRoute
         path="/google-material/inputs/equip"

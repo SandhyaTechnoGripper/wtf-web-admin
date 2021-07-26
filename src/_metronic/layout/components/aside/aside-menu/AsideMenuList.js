@@ -112,7 +112,7 @@ export function AsideMenuList({ layoutProps }) {
                     >
                       <NavLink
                         className="menu-link"
-                        to="/google-material/inputs/switches"
+                        to="/gym"
                       >
                         <i className="menu-bullet menu-bullet-dot">
                           <span />
