@@ -11,6 +11,7 @@ import TransferListExamplesPage from "./TransferListExamplesPage";
 import EquipmentManagement from "./EquipmentManagement";
 import AutocompleteExamplesPage from "./AutocompleteExamplesPage";
 import { ContentRoute } from "../../../../_metronic/layout";
+import TrainerManagement from "./TrainerManagement";
 
 export function InputsPage() {
   return (
@@ -47,7 +48,7 @@ export function InputsPage() {
       />
       <ContentRoute
         path="/google-material/inputs/switches"
-        component={SwitchesExamplesPage}
+        component={TransferListExamplesPage}
       />
       <ContentRoute
         path="/google-material/inputs/text-fields"
@@ -55,8 +56,9 @@ export function InputsPage() {
       />
       <ContentRoute
         path="/google-material/inputs/transfer-list"
-        component={TransferListExamplesPage}
+        component={TrainerManagement}
       />
+
       <ContentRoute
         path="/google-material/inputs/equip"
         component={EquipmentManagement}

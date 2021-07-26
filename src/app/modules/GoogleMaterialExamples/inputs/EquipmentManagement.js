@@ -96,12 +96,11 @@ export default function EquipmentManagement() {
   const classes2 = useStyles2();
 
   const [getData, setGetData] = useState([]);
-  const [values, setValues] = useState({
-    gym_id: "",
-    equipment: "",
-    quantity: "",
-    brand: "",
-  });
+
+  const [gym_id, setGymId] = useState("");
+  const [equipment, setEquipment] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [brand, setBrand] = useState("");
 
   useEffect(() => {
     if (authToken) {
@@ -109,15 +108,8 @@ export default function EquipmentManagement() {
     }
   }, []);
 
-  const handleInputChange = (name) => (event) => {
-    setValues({
-      ...values,
-      [name]: event.target.value,
-    });
-  };
-
   const fetchGetData = () => {
-    fetch("http://13.232.102.139:9000/user/", {
+    fetch("http://13.232.102.139:9000/equipment/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -131,17 +123,16 @@ export default function EquipmentManagement() {
       });
   };
 
-  function equipAdd(e) {
+  const equipAdd = (e) => {
     e.preventDefault();
-    console.log("clicked");
-    // const postData = {
-    //   name,
-    //   email,
-    //   mobile,
-    //   password,
-    //   account_type,
-    // };
 
+    const postData = {
+      gym_id,
+      equipment,
+      quantity,
+      brand,
+    };
+    console.log("clicked", postData);
     // console.log(typeof postData);
     // console.log(postData);
 
@@ -156,7 +147,7 @@ export default function EquipmentManagement() {
     // fetch("http://13.232.102.139:9000/user/add", requestOptions)
     //   .then((response) => response.json())
     //   .then((data) => postData);
-  }
+  };
 
   return (
     <>
@@ -192,8 +183,8 @@ export default function EquipmentManagement() {
                 name="gym_id"
                 label="Equipment Id"
                 className={classes2.textField}
-                value={values.gym_id}
-                onChange={(e) => handleInputChange(e)}
+                value={gym_id}
+                onChange={(e) => setGymId(e.target.value)}
                 SelectProps={{
                   MenuProps: {
                     className: classes2.menu,
@@ -202,11 +193,12 @@ export default function EquipmentManagement() {
                 margin="normal"
                 variant="outlined"
               >
-                {getData.map((option) => (
-                  <MenuItem key={option.gym_id} value={option.gym_id}>
-                    {option.gym_id}
-                  </MenuItem>
-                ))}
+                {getData?.length > 0 &&
+                  getData.map((option) => (
+                    <MenuItem key={option.uid} value={option.gym_id}>
+                      {option.gym_id}
+                    </MenuItem>
+                  ))}
               </TextField>
 
               <TextField
@@ -217,7 +209,8 @@ export default function EquipmentManagement() {
                 className={classes2.textField}
                 margin="normal"
                 variant="outlined"
-                onChange={(e) => handleInputChange(e)}
+                value={equipment}
+                onChange={(e) => setEquipment(e.target.value)}
               />
               <TextField
                 error
@@ -227,7 +220,8 @@ export default function EquipmentManagement() {
                 className={classes2.textField}
                 margin="normal"
                 variant="outlined"
-                onChange={(e) => handleInputChange(e)}
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
               />
 
               <TextField
@@ -238,7 +232,8 @@ export default function EquipmentManagement() {
                 className={classes2.textField}
                 margin="normal"
                 variant="outlined"
-                onChange={(e) => handleInputChange(e)}
+                value={brand}
+                onChange={(e) => setBrand(e.target.value)}
               />
               <Button
                 variant="contained"
@@ -349,15 +344,14 @@ export default function EquipmentManagement() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {getData.map((row) => (
-                    <TableRow key={row.name}>
+                  {getData?.map((row) => (
+                    <TableRow key={row.uid}>
                       <TableCell component="th" scope="row">
-                        {row.name}
+                        {row.gym_id}
                       </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
+                      <TableCell align="right">{row.equipment}</TableCell>
+                      <TableCell align="right">{row.quantity}</TableCell>
+                      <TableCell align="right">{row.brand}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
