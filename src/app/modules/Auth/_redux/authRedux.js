@@ -1,5 +1,5 @@
-import {persistStore, persistReducer} from "redux-persist";
-import {createStore} from "redux";
+import { persistStore, persistReducer } from "redux-persist";
+import { createStore } from "redux";
 import storage from "redux-persist/lib/storage";
 import { put, takeLatest } from "redux-saga/effects";
 import { getUserByToken } from "./authCrud";
@@ -15,16 +15,17 @@ export const actionTypes = {
 
 const initialAuthState = {
   user: undefined,
-  authToken: undefined,
+  authToken: localStorage.getItem("token")
+    ? localStorage.getItem("token")
+    : undefined,
 };
-
 
 export const reducer = persistReducer(
   { storage, key: "v726-demo1-auth", whitelist: ["authToken"] },
   (state = initialAuthState, action) => {
     switch (action.type) {
       case actionTypes.Login: {
-        console.log("1002")
+        console.log("1002");
         const { authToken } = action.payload;
 
         return { authToken, user: undefined };
@@ -38,7 +39,10 @@ export const reducer = persistReducer(
 
       case actionTypes.Logout: {
         // TODO: Change this code. Actions in reducer aren't allowed.
-        return initialAuthState;
+
+        // removing token from local storage
+        localStorage.removeItem("token");
+        return { user: undefined, authToken: undefined };
       }
 
       case actionTypes.UserLoaded: {

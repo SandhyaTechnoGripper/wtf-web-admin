@@ -27,7 +27,7 @@ const initialValues = {
 
 
 const data = localStorage.getItem("token");
-console.log(data)
+// console.log(data)
 
 function Login(props) {
 

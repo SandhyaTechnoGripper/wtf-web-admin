@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { shallowEqual, useSelector, connect, useDispatch } from "react-redux";
 import { LayoutSplashScreen } from "../../../../_metronic/layout";
 import * as auth from "./authRedux";
-import { getUserByToken } from "./authCrud";
+// import { getUserByToken } from "./authCrud";
 
 function AuthInit(props) {
   const didRequest = useRef(false);
@@ -20,8 +20,12 @@ function AuthInit(props) {
     const requestUser = async () => {
       try {
         if (!didRequest.current) {
-          const { data: user } = await getUserByToken();
-          dispatch(props.fulfillUser(user));
+          // before
+          // const { data: user } = await getUserByToken();
+          // dispatch(props.fulfillUser(user));
+
+          // after
+          dispatch(props.fulfillUser(authToken));
         }
       } catch (error) {
         console.error(error);

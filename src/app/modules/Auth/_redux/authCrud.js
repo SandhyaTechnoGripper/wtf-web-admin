@@ -17,10 +17,9 @@ export function login(username, password) {
   })
   .then((myJson) => {
     let t = myJson.data;
-    
-    localStorage.setItem("token", myJson);
+    localStorage.setItem("token", myJson.data.token);
     return t;
-    console.log("2")
+    // console.log("2")
     // console.log(myJson.status)
     // if (myJson.status== true){
     //   console.log("true")

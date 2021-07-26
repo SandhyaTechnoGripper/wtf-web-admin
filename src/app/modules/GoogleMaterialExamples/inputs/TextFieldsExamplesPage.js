@@ -1,150 +1,135 @@
 /* eslint-disable no-restricted-imports */
-import React, { useState,useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { shallowEqual, useSelector } from "react-redux";
+import axios from "axios";
 import clsx from "clsx";
-import {
-  TextField,
-  InputBase,
-
-} from "@material-ui/core";
-import { useHistory, useParams } from 'react-router-dom';
-import {green} from "@material-ui/core/colors";
+import { TextField, InputBase } from "@material-ui/core";
+import { useHistory, useParams } from "react-router-dom";
+import { green } from "@material-ui/core/colors";
 import {
   fade,
   withStyles,
   makeStyles,
-  createMuiTheme
+  createMuiTheme,
 } from "@material-ui/core/styles";
 
-
-import {Notice, KTCodeExample} from "../../../../_metronic/_partials/controls";
-import MenuItem from '@material-ui/core/MenuItem';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import GoogleMaterialPage from '../GoogleMaterialPage';
-
-
-
-
+import {
+  Notice,
+  KTCodeExample,
+} from "../../../../_metronic/_partials/controls";
+import MenuItem from "@material-ui/core/MenuItem";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
+import GoogleMaterialPage from "../GoogleMaterialPage";
 
 // Submit
-const useStyles3 = makeStyles(theme => ({
+const useStyles3 = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
-  }, 
+  },
   input: {
-    display: 'none',
+    display: "none",
   },
 }));
 
-
-
 //view user
-const useStyles4 = makeStyles(theme => ({
+const useStyles4 = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: "100%",
     marginTop: theme.spacing(3),
-    overflowX: 'auto',
+    overflowX: "auto",
   },
   table: {
     minWidth: 650,
   },
 }));
 
-    
-   
-
-        
-
-function createData(name, email, mobile, account_type,status) {
-  return { name, email, mobile, account_type,status };
+function createData(name, email, mobile, account_type, status) {
+  return { name, email, mobile, account_type, status };
 }
 
 const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-]
+  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
+  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
+  createData("Eclair", 262, 16.0, 24, 6.0),
+  createData("Cupcake", 305, 3.7, 67, 4.3),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
+];
 // add user
 
-
-
-const useStyles2 = makeStyles(theme => ({
+const useStyles2 = makeStyles((theme) => ({
   container: {
     display: "flex",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
   },
   textField: {
     marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   dense: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   menu: {
-    width: 200
-  }
+    width: 200,
+  },
 }));
 
-
-
-
 export default function TextFieldsExamplesPage() {
-
-// submit button
+  // submit button
   const classes3 = useStyles3();
   //view user
-  const classes4 = useStyles4(); 
+  const classes4 = useStyles4();
 
-  const [getData, setGetData] = React.useState([])
-
+  const [getData, setGetData] = React.useState([]);
+  const { authToken } = useSelector(
+    ({ auth }) => ({
+      authToken: auth.authToken,
+    }),
+    shallowEqual
+  );
   // useEffect(() => {
 
   //   fetch('http://13.232.102.139:9000/user/', {
   //     method: "GET",
   //     headers: { 'Content-Type': 'application/json', '' },
   //   })
-  //   .then(response => response.json()) 
+  //   .then(response => response.json())
   //   .then(data => printIt(data));
   // }, []);
   // const  printIt = (data) => {
-    
+
   //   setView(data.data)
   //   console.log(data.data)
 
   // }
   // console.log(view)
-  const fetchGetData = () =>{
-    fetch('http://13.232.102.139:9000/user/', {
-    method: 'GET',
-    headers: {
-    'Content-Type': 'application/json',
-    'Authrization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJiR3lQWEpBcDhZV1pOIiwibmFtZSI6Im1vaGl0IiwiaWF0IjoxNjI3MDQ2MDc1LCJleHAiOjE2MjcwNzEyNzV9.yhWEv984GE-hiv6LqR7oZjUFwf2WLBFFLjBS1niaNaE'
-    }
-    
+  const fetchGetData = () => {
+    fetch("http://13.232.102.139:9000/user/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
     })
-    .then(response => response.json())
-    .then(responseJson => {
-    setGetData(responseJson.data)
-    console.log('Success GetData :', responseJson);
-    
-    
-    })
-    
-    }
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setGetData(responseJson.data);
+        console.log("Success GetData :", responseJson);
+      });
+  };
 
-    useEffect(() => {
+  useEffect(() => {
+    if (authToken) {
       fetchGetData();
-      }, []);
+    }
+  }, []);
 
-console.log(getData)
+  // console.log(getData);
   // add user
 
   const classes2 = useStyles2();
@@ -152,43 +137,36 @@ console.log(getData)
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
-  const [account_type,setAccount_type] = useState("");
-  
+  const [account_type, setAccount_type] = useState("");
+
   const history = useHistory();
 
-
-
-  function Useradd(e){
-    e.preventDefault()
-    const postData ={
+  function Useradd(e) {
+    e.preventDefault();
+    const postData = {
       name,
       email,
       mobile,
       password,
-      account_type
-      }
+      account_type,
+    };
 
     console.log(typeof postData);
-    console.log(postData)
+    console.log(postData);
 
-    
+    // POST request using fetch inside useEffect React hook
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(postData),
+    };
+    fetch("http://13.232.102.139:9000/user/add", requestOptions)
+      .then((response) => response.json())
+      .then((data) => postData);
+  }
 
-      // POST request using fetch inside useEffect React hook
-      const requestOptions = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', },
-          body: JSON.stringify(postData)
-      };
-      fetch('http://13.232.102.139:9000/user/add', requestOptions)
-          .then(response => response.json())
-          .then(data => postData);
-     
-    }
-
-
-  return ( 
+  return (
     <>
-
       <div className="row">
         <div className="col-md-3">
           <KTCodeExample
@@ -200,24 +178,23 @@ console.log(getData)
               <code>TextField</code> supports outlined styling.
             </span>
             <div className="separator separator-dashed my-7"></div>
-            <form className={classes2.container} noValidate autoComplete="off" >
+            <form className={classes2.container} noValidate autoComplete="off">
               <TextField
                 id="outlined-name"
                 label="Name"
                 className={classes2.textField}
                 value={name}
-                onChange={(e)=> setName(e.target.value)}
+                onChange={(e) => setName(e.target.value)}
                 margin="normal"
                 variant="outlined"
               />
 
               <TextField
-                
                 id="outlined-error"
                 label="Account Type"
                 value={account_type}
                 className={classes2.textField}
-                onChange={(e)=> setAccount_type(e.target.value)}
+                onChange={(e) => setAccount_type(e.target.value)}
                 margin="normal"
                 variant="outlined"
               />
@@ -231,7 +208,7 @@ console.log(getData)
                 autoComplete="email"
                 margin="normal"
                 variant="outlined"
-                onChange={(e)=> setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <TextField
                 id="outlined-password-input"
@@ -242,17 +219,17 @@ console.log(getData)
                 autoComplete="current-password"
                 margin="normal"
                 variant="outlined"
-                onChange={(e)=> setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <TextField
                 id="outlined-read-only-input"
                 label="Phone"
-                type= "number"
+                type="number"
                 value={mobile}
                 className={classes2.textField}
                 margin="normal"
                 variant="outlined"
-                onChange={(e)=> setMobile(e.target.value)}
+                onChange={(e) => setMobile(e.target.value)}
               />
               {/* <TextField
                 id="outlined-select-currency"
@@ -275,57 +252,58 @@ console.log(getData)
                   </MenuItem>
                 ))}
               </TextField> */}
-              <Button variant="contained" className={classes3.button} onClick ={Useradd}>
-
+              <Button
+                variant="contained"
+                className={classes3.button}
+                onClick={Useradd}
+              >
                 Submit
               </Button>
             </form>
-            
           </KTCodeExample>
         </div>
 
         <div className="col-md-9">
-        <KTCodeExample
+          <KTCodeExample
             jsCode={jsCode4}
             beforeCodeTitle="View User"
             codeBlockHeight="400px"
           >
-          <Paper className={classes4.root}>
-            <Table className={classes4.table}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell align="right">Account type</TableCell>
-                  <TableCell align="right">Email</TableCell>
-                  <TableCell align="right">Phone</TableCell>
-                  <TableCell align="right">Status</TableCell>
-                  <TableCell align="centre">Action</TableCell>
-                  
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {getData.map(row => (
-                  <TableRow key={row.name}>
-                    <TableCell component="th" scope="row">
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="right">{row.account_type}</TableCell>
-                    <TableCell align="right">{row.email}</TableCell>
-                    <TableCell align="right">{row.mobile}</TableCell>
-                    <TableCell align="right">{row.status}</TableCell>
-                    <TableCell allign="right">
-                    <Button >
-                    <i class="fa fa-edit"></i>
-                    </Button>
-                    <Button>
-                    <i class="fa fa-trash"   ></i>
-                    </Button>
-                    </TableCell>
+            <Paper className={classes4.root}>
+              <Table className={classes4.table}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell align="right">Account type</TableCell>
+                    <TableCell align="right">Email</TableCell>
+                    <TableCell align="right">Phone</TableCell>
+                    <TableCell align="right">Status</TableCell>
+                    <TableCell align="centre">Action</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Paper>
+                </TableHead>
+                <TableBody>
+                  {getData?.map((row) => (
+                    <TableRow key={row.name}>
+                      <TableCell component="th" scope="row">
+                        {row.name}
+                      </TableCell>
+                      <TableCell align="right">{row.account_type}</TableCell>
+                      <TableCell align="right">{row.email}</TableCell>
+                      <TableCell align="right">{row.mobile}</TableCell>
+                      <TableCell align="right">{row.status}</TableCell>
+                      <TableCell allign="right">
+                        <Button>
+                          <i class="fa fa-edit"></i>
+                        </Button>
+                        <Button>
+                          <i class="fa fa-trash"></i>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Paper>
           </KTCodeExample>
         </div>
       </div>
