@@ -95,12 +95,15 @@ export default function EquipmentManagement() {
   // add equipment
   const classes2 = useStyles2();
 
+  const [editModalOpen, setEditModalOpen] = useState({ open: false, id: null });
   const [getData, setGetData] = useState([]);
 
-  const [gym_id, setGymId] = useState("");
-  const [equipment, setEquipment] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [brand, setBrand] = useState("");
+  const [values, setValues] = useState({
+    gym_id: "",
+    equipment: "",
+    quantity: "",
+    brand: "",
+  });
 
   useEffect(() => {
     if (authToken) {
@@ -119,36 +122,100 @@ export default function EquipmentManagement() {
       .then((response) => response.json())
       .then((responseJson) => {
         setGetData(responseJson.data);
-        console.log("Success GetData :", responseJson);
       });
+  };
+
+  const handleChange = (name) => (event) => {
+    setValues({ ...values, [name]: event.target.value });
   };
 
   const equipAdd = (e) => {
     e.preventDefault();
-
-    const postData = {
-      gym_id,
-      equipment,
-      quantity,
-      brand,
+    // POST request using fetch inside useEffect React hook
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify(values),
     };
-    console.log("clicked", postData);
-    // console.log(typeof postData);
-    // console.log(postData);
-
-    // // POST request using fetch inside useEffect React hook
-    // const requestOptions = {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(postData),
-    // };
-    // fetch("http://13.232.102.139:9000/user/add", requestOptions)
-    //   .then((response) => response.json())
-    //   .then((data) => postData);
+    fetch("http://13.232.102.139:9000/equipment/add/", requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        fetchGetData();
+      });
   };
 
+  const getParticularEquipment = (id) => {
+    if (editModalOpen.open) {
+      setValues({
+        gym_id: "",
+        equipment: "",
+        quantity: "",
+        brand: "",
+      });
+      return setEditModalOpen({ open: false, id: null });
+    }
+
+    setEditModalOpen({ open: true, id: id });
+    let equipment = getData.filter((data) => data.uid === id);
+    setValues({
+      gym_id: equipment[0].gym_id,
+      equipment: equipment[0].equipment,
+      quantity: equipment[0].quantity,
+      brand: equipment[0].brand,
+    });
+  };
+
+  const updateData = () => {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ equipment_id: editModalOpen.id, ...values }),
+    };
+    fetch("http://13.232.102.139:9000/equipment/update", requestOptions).then(
+      (response) => {
+        if (response.ok) {
+          // success
+          fetchGetData();
+          setValues({
+            gym_id: "",
+            equipment: "",
+            quantity: "",
+            brand: "",
+          });
+        } else {
+          // error
+        }
+      }
+    );
+  };
+
+  const deleteData = (id) => {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ uid: id }),
+    };
+    fetch("http://13.232.102.139:9000/equipment/delete", requestOptions).then(
+      (response) => {
+        if (response.ok) {
+          // success
+          let data = getData.filter((data) => data.uid !== id);
+          setGetData(data);
+        } else {
+          // error
+        }
+      }
+    );
+  };
   return (
     <>
       <Notice icon="flaticon-warning font-primary">
@@ -167,163 +234,171 @@ export default function EquipmentManagement() {
       </Notice>
       <div className="row">
         <div className="col-md-4">
-          <KTCodeExample
-            jsCode={jsCode1}
-            beforeCodeTitle="Add Equipment"
-            codeBlockHeight="400px"
-          >
-            <span>
-              <code>TextField</code> supports outlined styling.
-            </span>
-            <div className="separator separator-dashed my-7"></div>
-            <form className={classes2.container} noValidate autoComplete="off">
-              <TextField
-                id="outlined-select-currency"
-                select
-                name="gym_id"
-                label="Equipment Id"
-                className={classes2.textField}
-                value={gym_id}
-                onChange={(e) => setGymId(e.target.value)}
-                SelectProps={{
-                  MenuProps: {
-                    className: classes2.menu,
-                  },
-                }}
-                margin="normal"
-                variant="outlined"
+          {!editModalOpen.open ? (
+            <KTCodeExample
+              jsCode={jsCode1}
+              beforeCodeTitle="Add Equipment"
+              codeBlockHeight="400px"
+            >
+              <span>
+                <code>TextField</code> supports outlined styling.
+              </span>
+              <div className="separator separator-dashed my-7"></div>
+              <form
+                className={classes2.container}
+                noValidate
+                autoComplete="off"
               >
-                {getData?.length > 0 &&
-                  getData.map((option) => (
-                    <MenuItem key={option.uid} value={option.gym_id}>
-                      {option.gym_id}
-                    </MenuItem>
-                  ))}
-              </TextField>
+                <TextField
+                  id="outlined-select-currency"
+                  select
+                  name="gym_id"
+                  label="Equipment Id"
+                  className={classes2.textField}
+                  value={values.gym_id}
+                  onChange={handleChange("gym_id")}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes2.menu,
+                    },
+                  }}
+                  margin="normal"
+                  variant="outlined"
+                >
+                  {getData?.length > 0 &&
+                    getData.map((option) => (
+                      <MenuItem key={option.uid} value={option.gym_id}>
+                        {option.gym_id}
+                      </MenuItem>
+                    ))}
+                </TextField>
 
-              <TextField
-                error
-                id="outlined-error"
-                name="equipment"
-                label="Equipment"
-                className={classes2.textField}
-                margin="normal"
-                variant="outlined"
-                value={equipment}
-                onChange={(e) => setEquipment(e.target.value)}
-              />
-              <TextField
-                error
-                id="outlined-error"
-                name="quantity"
-                label="Quantity"
-                className={classes2.textField}
-                margin="normal"
-                variant="outlined"
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-              />
+                <TextField
+                  // error
+                  id="outlined-error"
+                  name="equipment"
+                  label="Equipment"
+                  className={classes2.textField}
+                  margin="normal"
+                  variant="outlined"
+                  value={values.equipment}
+                  onChange={handleChange("equipment")}
+                />
+                <TextField
+                  // error
+                  id="outlined-error"
+                  name="quantity"
+                  label="Quantity"
+                  className={classes2.textField}
+                  margin="normal"
+                  variant="outlined"
+                  value={values.quantity}
+                  onChange={handleChange("quantity")}
+                />
 
-              <TextField
-                error
-                id="outlined-error"
-                name="brand"
-                label="Brand"
-                className={classes2.textField}
-                margin="normal"
-                variant="outlined"
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
-              />
-              <Button
-                variant="contained"
-                className={classes3.button}
-                onClick={equipAdd}
+                <TextField
+                  // error
+                  id="outlined-error"
+                  name="brand"
+                  label="Brand"
+                  className={classes2.textField}
+                  margin="normal"
+                  variant="outlined"
+                  value={values.brand}
+                  onChange={handleChange("brand")}
+                />
+                <Button
+                  variant="contained"
+                  className={classes3.button}
+                  onClick={equipAdd}
+                >
+                  Submit
+                </Button>
+              </form>
+            </KTCodeExample>
+          ) : (
+            <KTCodeExample
+              jsCode={jsCode1}
+              beforeCodeTitle="Update Equipment"
+              codeBlockHeight="400px"
+            >
+              <span>
+                <code>TextField</code> supports outlined styling.
+              </span>
+              <div className="separator separator-dashed my-7"></div>
+              <form
+                className={classes2.container}
+                noValidate
+                autoComplete="off"
               >
-                Submit
-              </Button>
-            </form>
-          </KTCodeExample>
+                <TextField
+                  id="outlined-select-currency"
+                  select
+                  name="gym_id"
+                  label="Equipment Id"
+                  className={classes2.textField}
+                  value={values.gym_id}
+                  onChange={handleChange("gym_id")}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes2.menu,
+                    },
+                  }}
+                  margin="normal"
+                  variant="outlined"
+                >
+                  {getData?.length > 0 &&
+                    getData.map((option) => (
+                      <MenuItem key={option.uid} value={option.gym_id}>
+                        {option.gym_id}
+                      </MenuItem>
+                    ))}
+                </TextField>
 
-          {/* <KTCodeExample
-            jsCode={jsCode1}
-            beforeCodeTitle="Update User"
-            codeBlockHeight="400px"
-          >
-            <span>
-              <code>TextField</code> supports outlined styling.
-            </span>
-            <div className="separator separator-dashed my-7"></div>
-            <form className={classes2.container} noValidate autoComplete="off">
-              <TextField
-                id="outlined-name"
-                label="Name"
-                className={classes3.textField}
-                value={values3.name}
-                onChange={handleChange3("name")}
-                margin="normal"
-                variant="outlined"
-              />
+                <TextField
+                  // error
+                  id="outlined-error"
+                  name="equipment"
+                  label="Equipment"
+                  className={classes2.textField}
+                  margin="normal"
+                  variant="outlined"
+                  value={values.equipment}
+                  onChange={handleChange("equipment")}
+                />
+                <TextField
+                  // error
+                  id="outlined-error"
+                  name="quantity"
+                  label="Quantity"
+                  className={classes2.textField}
+                  margin="normal"
+                  variant="outlined"
+                  value={values.quantity}
+                  onChange={handleChange("quantity")}
+                />
 
-              <TextField
-                error
-                id="outlined-error"
-                label="Account type"
-                className={classes3.textField}
-                margin="normal"
-                variant="outlined"
-              />
-
-              <TextField
-                id="outlined-email-input"
-                label="Email"
-                className={classes3.textField}
-                type="email"
-                name="email"
-                autoComplete="email"
-                margin="normal"
-                variant="outlined"
-              />
-              <TextField
-                id="outlined-password-input"
-                label="Password"
-                className={classes3.textField}
-                type="password"
-                autoComplete="current-password"
-                margin="normal"
-                variant="outlined"
-              />
-              <TextField
-                id="outlined-read-only-input"
-                label="Phone"
-                type="number"
-                className={classes3.textField}
-                margin="normal"
-                variant="outlined"
-              />
-              <TextField
-                id="outlined-select-currency"
-                select
-                label="Status"
-                className={classes3.textField}
-                value={values3.currency}
-                onChange={handleChange3("currency")}
-                SelectProps={{
-                  MenuProps: {
-                    className: classes3.menu,
-                  },
-                }}
-                margin="normal"
-                variant="outlined"
-              >
-                {currencies.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </form>
-          </KTCodeExample> */}
+                <TextField
+                  // error
+                  id="outlined-error"
+                  name="brand"
+                  label="Brand"
+                  className={classes2.textField}
+                  margin="normal"
+                  variant="outlined"
+                  value={values.brand}
+                  onChange={handleChange("brand")}
+                />
+                <Button
+                  variant="contained"
+                  className={classes3.button}
+                  onClick={updateData}
+                >
+                  Submit
+                </Button>
+              </form>
+            </KTCodeExample>
+          )}
         </div>
 
         <div className="col-md-8">
@@ -352,6 +427,22 @@ export default function EquipmentManagement() {
                       <TableCell align="right">{row.equipment}</TableCell>
                       <TableCell align="right">{row.quantity}</TableCell>
                       <TableCell align="right">{row.brand}</TableCell>
+                      <TableCell align="right">
+                        <Button
+                          variant="contained"
+                          className={classes3.button}
+                          onClick={() => getParticularEquipment(row.uid)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="contained"
+                          className={classes3.button}
+                          onClick={() => deleteData(row.uid)}
+                        >
+                          Delete
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

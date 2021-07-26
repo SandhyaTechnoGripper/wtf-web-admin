@@ -4,10 +4,11 @@ import { LayoutSplashScreen, ContentRoute } from "../_metronic/layout";
 import { BuilderPage } from "./pages/BuilderPage";
 import { MyPage } from "./pages/MyPage";
 import { DashboardPage } from "./pages/DashboardPage";
-import TextFieldsExamplesPage from "./modules/GoogleMaterialExamples/inputs/TextFieldsExamplesPage";
-import Trainer from "./pages/trainer";
 import EditUser from "./pages/editUser";
-import TransferListExamplePage from "./modules/GoogleMaterialExamples/inputs/TransferListExamplesPage";
+import TrainerManagement from "./modules/GoogleMaterialExamples/inputs/TrainerManagement";
+import UserManagement from "./modules/GoogleMaterialExamples/inputs/UserManagement";
+import GymManagement from "./modules/GoogleMaterialExamples/inputs/GymManagement";
+import EquipmentManagement from "./modules/GoogleMaterialExamples/inputs/EquipmentManagement";
 
 const GoogleMaterialPage = lazy(() =>
   import("./modules/GoogleMaterialExamples/GoogleMaterialPage")
@@ -36,11 +37,13 @@ export default function BasePage() {
           <Redirect exact from="/" to="/dashboard" />
         }
         <ContentRoute path="/dashboard" component={DashboardPage} />
-        <ContentRoute path="/allusers" component={TextFieldsExamplesPage} />
+        <ContentRoute path="/allusers" component={UserManagement} />
         <ContentRoute path="/edit-users" component={EditUser} />
 
-        <ContentRoute path="/trainer" component={Trainer} />
-        <ContentRoute path="/gym" component={TransferListExamplePage} />
+        <ContentRoute path="/trainer" component={TrainerManagement} />
+        <ContentRoute path="/gym" component={GymManagement} />
+        <ContentRoute path="/equip" component={EquipmentManagement} />
+
         <ContentRoute path="/builder" component={BuilderPage} />
         <ContentRoute path="/my-page" component={MyPage} />
         <Route path="/google-material" component={GoogleMaterialPage} />

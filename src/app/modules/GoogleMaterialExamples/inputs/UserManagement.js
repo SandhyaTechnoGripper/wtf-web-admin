@@ -1,148 +1,139 @@
 /* eslint-disable no-restricted-imports */
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { shallowEqual, useSelector } from "react-redux";
+import axios from "axios";
 import clsx from "clsx";
-import {
-  TextField,
-  InputBase,
-
-} from "@material-ui/core";
-import {green} from "@material-ui/core/colors";
+import { TextField, InputBase } from "@material-ui/core";
+import { useHistory, useParams } from "react-router-dom";
+import { green } from "@material-ui/core/colors";
 import {
   fade,
   withStyles,
   makeStyles,
-  createMuiTheme
+  createMuiTheme,
 } from "@material-ui/core/styles";
 
-import {Notice, KTCodeExample} from "../../../../_metronic/_partials/controls";
-import MenuItem from '@material-ui/core/MenuItem';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import {
+  Notice,
+  KTCodeExample,
+} from "../../../../_metronic/_partials/controls";
+import MenuItem from "@material-ui/core/MenuItem";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
+import GoogleMaterialPage from "../GoogleMaterialPage";
 
-
-const currencies = [
-  {
-    value: 'Active',
-    label: 'Active',
+// Submit
+const useStyles3 = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
   },
-  {
-    value: 'Inactive',
-    label: 'Inactive',
+  input: {
+    display: "none",
   },
-];
-// update user
-const useStyles3 = makeStyles(theme => ({
-  container: {
-    display: "flex",
-    flexWrap: "wrap"
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1)
-  },
-  dense: {
-    marginTop: theme.spacing(2)
-  },
-  menu: {
-    width: 200
-  }
 }));
 
 //view user
-const useStyles4 = makeStyles(theme => ({
+const useStyles4 = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: "100%",
     marginTop: theme.spacing(3),
-    overflowX: 'auto',
+    overflowX: "auto",
   },
   table: {
     minWidth: 650,
   },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-]
 // add user
-const useStyles2 = makeStyles(theme => ({
+
+const useStyles2 = makeStyles((theme) => ({
   container: {
     display: "flex",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
   },
   textField: {
     marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   dense: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   menu: {
-    width: 200
-  }
+    width: 200,
+  },
 }));
 
-
 export default function UserManagement() {
-
-  //update user
+  // submit button
   const classes3 = useStyles3();
-  const [values3, setValues3] = React.useState({
-    name: "Cat in the Hat",
-    age: "",
-    multiline: "Controlled",
-    currency: "EUR"
-  });
-
-  const handleChange3 = name => event => {
-    setValues3({ ...values3, [name]: event.target.value });
-  };
-
   //view user
   const classes4 = useStyles4();
-  // add user
-  const classes2 = useStyles2();
-  const [values2, setValues2] = React.useState({
-    name: "Cat in the Hat",
-    age: "",
-    multiline: "Controlled",
-    currency: "EUR"
-  });
 
-  const handleChange2 = name => event => {
-    setValues2({ ...values2, [name]: event.target.value });
+  const classes2 = useStyles2();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [password, setPassword] = useState("");
+  const [account_type, setAccount_type] = useState("");
+  const [getData, setGetData] = useState([]);
+
+  const { authToken } = useSelector(
+    ({ auth }) => ({
+      authToken: auth.authToken,
+    }),
+    shallowEqual
+  );
+
+  useEffect(() => {
+    if (authToken) {
+      fetchGetData();
+    }
+  }, []);
+
+  const fetchGetData = () => {
+    fetch("http://13.232.102.139:9000/user/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setGetData(responseJson.data);
+      });
   };
 
+  function Useradd(e) {
+    e.preventDefault();
+    const postData = {
+      name,
+      email,
+      mobile,
+      password,
+      account_type,
+    };
+
+    // POST request using fetch inside useEffect React hook
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(postData),
+    };
+    fetch("http://13.232.102.139:9000/user/add", requestOptions)
+      .then((response) => response.json())
+      .then((data) => postData);
+  }
 
   return (
     <>
-      <Notice icon="flaticon-warning font-primary">
-        <span>Text fields let users enter and edit text.</span>{" "}
-        <span>
-          For more info please check the components's official{" "}
-          <a
-            target="_blank"
-            className="font-weight-bold"
-            rel="noopener noreferrer"
-            href="https://material-ui.com/components/text-fields/"
-          >
-            demos & documentation
-          </a>
-        </span>
-      </Notice>
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-3">
           <KTCodeExample
             jsCode={jsCode2}
             beforeCodeTitle="Add User"
@@ -157,17 +148,18 @@ export default function UserManagement() {
                 id="outlined-name"
                 label="Name"
                 className={classes2.textField}
-                value={values2.name}
-                onChange={handleChange2("name")}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 margin="normal"
                 variant="outlined"
               />
 
               <TextField
-                error
                 id="outlined-error"
-                label="Account type"
+                label="Account Type"
+                value={account_type}
                 className={classes2.textField}
+                onChange={(e) => setAccount_type(e.target.value)}
                 margin="normal"
                 variant="outlined"
               />
@@ -177,34 +169,39 @@ export default function UserManagement() {
                 label="Email"
                 className={classes2.textField}
                 type="email"
-                name="email"
+                value={email}
                 autoComplete="email"
                 margin="normal"
                 variant="outlined"
+                onChange={(e) => setEmail(e.target.value)}
               />
               <TextField
                 id="outlined-password-input"
                 label="Password"
                 className={classes2.textField}
                 type="password"
+                value={password}
                 autoComplete="current-password"
                 margin="normal"
                 variant="outlined"
+                onChange={(e) => setPassword(e.target.value)}
               />
               <TextField
                 id="outlined-read-only-input"
                 label="Phone"
-                type= "number"
+                type="number"
+                value={mobile}
                 className={classes2.textField}
                 margin="normal"
                 variant="outlined"
+                onChange={(e) => setMobile(e.target.value)}
               />
-              <TextField
+              {/* <TextField
                 id="outlined-select-currency"
                 select
-                label="Select"
+                label="Status"
                 className={classes2.textField}
-                value={values2.currency}
+                value={users.currency}
                 onChange={handleChange2("currency")}
                 SelectProps={{
                   MenuProps: {
@@ -219,125 +216,59 @@ export default function UserManagement() {
                     {option.label}
                   </MenuItem>
                 ))}
-              </TextField>
-            </form>
-            
-          </KTCodeExample>
-
-          <KTCodeExample
-            jsCode={jsCode3}
-            beforeCodeTitle="Update User"
-            codeBlockHeight="400px"
-          >
-            <span>
-              <code>TextField</code> supports outlined styling.
-            </span>
-            <div className="separator separator-dashed my-7"></div>
-            <form className={classes2.container} noValidate autoComplete="off">
-              <TextField
-                id="outlined-name"
-                label="Name"
-                className={classes3.textField}
-                value={values3.name}
-                onChange={handleChange3("name")}
-                margin="normal"
-                variant="outlined"
-              />
-
-              <TextField
-                error
-                id="outlined-error"
-                label="Account type"
-                className={classes3.textField}
-                margin="normal"
-                variant="outlined"
-              />
-
-              <TextField
-                id="outlined-email-input"
-                label="Email"
-                className={classes3.textField}
-                type="email"
-                name="email"
-                autoComplete="email"
-                margin="normal"
-                variant="outlined"
-              />
-              <TextField
-                id="outlined-password-input"
-                label="Password"
-                className={classes3.textField}
-                type="password"
-                autoComplete="current-password"
-                margin="normal"
-                variant="outlined"
-              />
-              <TextField
-                id="outlined-read-only-input"
-                label="Phone"
-                type= "number"
-                className={classes3.textField}
-                margin="normal"
-                variant="outlined"
-              />
-              <TextField
-                id="outlined-select-currency"
-                select
-                label="Status"
-                className={classes3.textField}
-                value={values3.currency}
-                onChange={handleChange3("currency")}
-                SelectProps={{
-                  MenuProps: {
-                    className: classes3.menu
-                  }
-                }}
-                margin="normal"
-                variant="outlined"
+              </TextField> */}
+              <Button
+                variant="contained"
+                className={classes3.button}
+                onClick={Useradd}
               >
-                {currencies.map(option => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
+                Submit
+              </Button>
             </form>
-            
           </KTCodeExample>
-         </div>
+        </div>
 
-        <div className="col-md-8">
-        <KTCodeExample
+        <div className="col-md-9">
+          <KTCodeExample
             jsCode={jsCode4}
             beforeCodeTitle="View User"
             codeBlockHeight="400px"
           >
-          <Paper className={classes4.root}>
-            <Table className={classes4.table}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell align="right">Account type</TableCell>
-                  <TableCell align="right">Email</TableCell>
-                  <TableCell align="right">Phone</TableCell>
-                  <TableCell align="right">Status</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map(row => (
-                  <TableRow key={row.name}>
-                    <TableCell component="th" scope="row">
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+            <Paper className={classes4.root}>
+              <Table className={classes4.table}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell align="right">Account type</TableCell>
+                    <TableCell align="right">Email</TableCell>
+                    <TableCell align="right">Phone</TableCell>
+                    <TableCell align="right">Status</TableCell>
+                    <TableCell align="centre">Action</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Paper>
+                </TableHead>
+                <TableBody>
+                  {getData?.map((row) => (
+                    <TableRow key={row.uid}>
+                      <TableCell component="th" scope="row">
+                        {row.name}
+                      </TableCell>
+                      <TableCell align="right">{row.account_type}</TableCell>
+                      <TableCell align="right">{row.email}</TableCell>
+                      <TableCell align="right">{row.mobile}</TableCell>
+                      <TableCell align="right">{row.status}</TableCell>
+                      <TableCell allign="right">
+                        <Button>
+                          <i className="fa fa-edit"></i>
+                        </Button>
+                        <Button>
+                          <i className="fa fa-trash"></i>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Paper>
           </KTCodeExample>
         </div>
       </div>

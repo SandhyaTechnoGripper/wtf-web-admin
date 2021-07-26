@@ -5,13 +5,8 @@ import CheckboxesExamplesPage from "./CheckboxesExamplesPage";
 import PickersExamplesPage from "./PickersExamplesPage";
 import RadioButtonsExamplesPage from "./RadioButtonsExamplesPage";
 import SelectsExamplesPage from "./SelectsExamplesPage";
-import SwitchesExamplesPage from "./SwitchesExamplesPage";
-import TextFieldsExamplesPage from "./TextFieldsExamplesPage";
-import TransferListExamplesPage from "./TransferListExamplesPage";
-import EquipmentManagement from "./EquipmentManagement";
 import AutocompleteExamplesPage from "./AutocompleteExamplesPage";
 import { ContentRoute } from "../../../../_metronic/layout";
-import TrainerManagement from "./TrainerManagement";
 
 export function InputsPage() {
   return (
@@ -45,14 +40,6 @@ export function InputsPage() {
       <ContentRoute
         path="/google-material/inputs/selects"
         component={SelectsExamplesPage}
-      />
-      <ContentRoute path="/gym" component={TransferListExamplesPage} />
-      <ContentRoute path="/user" component={TextFieldsExamplesPage} />
-      <ContentRoute path="/trainer" component={TrainerManagement} />
-
-      <ContentRoute
-        path="/google-material/inputs/equip"
-        component={EquipmentManagement}
       />
     </Switch>
   );

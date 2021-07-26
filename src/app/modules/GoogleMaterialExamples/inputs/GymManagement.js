@@ -25,7 +25,6 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import { getDate } from "date-fns";
-import { getUserByToken } from "../../Auth/_redux/authCrud";
 
 // Submit
 const useStyles3 = makeStyles((theme) => ({
@@ -78,7 +77,7 @@ const useStyles2 = makeStyles((theme) => ({
   },
 }));
 
-export default function TrainerManagement() {
+export default function GymManagement() {
   // submit button
   const classes3 = useStyles3();
 
@@ -87,10 +86,11 @@ export default function TrainerManagement() {
   // add gym
   const classes2 = useStyles2();
   const [selectedFile, setSelectedFile] = React.useState({
-    aadhar_card: null,
+    lease_agreement: null,
     electricity_bill: null,
     bank_statement: null,
   });
+  const [isSelected, setIsSelected] = React.useState(false);
   const [getData, setGetData] = React.useState([]);
   const [values, setValues] = React.useState({
     name: "",
@@ -109,33 +109,37 @@ export default function TrainerManagement() {
     }),
     shallowEqual
   );
-
-  useEffect(() => {
-    fetchGetData();
-  }, []);
-
+  // console.log("filesdata",files)
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
+    // console.log("data of gym",values)
+  };
+  const changeHandler = (name) => (event) => {
+    setSelectedFile({
+      ...selectedFile,
+      [name]: event.target.files[0],
+    });
+    setIsSelected(true);
   };
 
   const handleInput = () => {
     const data = new FormData();
     data.append("name", values.name);
     data.append("gym_name", values.name);
-    data.append("gym_id", "123");
-    data.append("email", "a@a.com");
     data.append("address1", values.address1);
     data.append("address2", values.address2);
     data.append("city", values.city);
     data.append("state", values.state);
     data.append("pin", values.pin);
     data.append("country", values.country);
-    data.append("date_oboarding", "1221212");
-    data.append("aadhar_card", selectedFile.aadhar_card);
-    data.append("pan_card", selectedFile.pan_card);
+    data.append("lat", "1221212");
+    data.append("long", "11212");
+    data.append("lease_agreement", selectedFile.lease_agreement);
+    data.append("electricity_bill", selectedFile.electricity_bill);
+    data.append("bank_statement", selectedFile.bank_statement);
     data.append("user_id", "zeWBVGFpEKTBh");
 
-    fetch("http://13.232.102.139:9000/trainer/add", {
+    fetch("http://13.232.102.139:9000/gym/add", {
       method: "POST",
       headers: {
         // "Content-Type": "multipart/form-data",
@@ -152,7 +156,7 @@ export default function TrainerManagement() {
       });
   };
   const fetchGetData = () => {
-    fetch("http://13.232.102.139:9000/trainer/", {
+    fetch("http://13.232.102.139:9000/gym/", {
       method: "GET",
       headers: {
         // 'Content-Type': 'application/json',
@@ -166,13 +170,17 @@ export default function TrainerManagement() {
       });
   };
 
+  useEffect(() => {
+    fetchGetData();
+  }, []);
+
   return (
     <>
       <div className="row">
         <div className="col-md-4">
           <KTCodeExample
             // jsCode={jsCode2}
-            beforeCodeTitle="Add Trainer"
+            beforeCodeTitle="Add Gym"
             codeBlockHeight="400px"
           >
             <div className="separator separator-dashed my-7"></div>
@@ -246,6 +254,22 @@ export default function TrainerManagement() {
                 margin="normal"
                 variant="outlined"
               />
+              <TextField
+                id="outlined"
+                label="Lease Agreement"
+                type="file"
+                className={classes2.textField}
+                // name='lease_agreement'
+                // value={selectedFile.lease_agreement}
+                onChange={(e) =>
+                  setSelectedFile({
+                    ...selectedFile,
+                    lease_agreement: e.target.files[0],
+                  })
+                }
+                margin="normal"
+                variant="outlined"
+              />
 
               <TextField
                 id="outlined"
@@ -257,7 +281,7 @@ export default function TrainerManagement() {
                 onChange={(e) =>
                   setSelectedFile({
                     ...selectedFile,
-                    aadhar_card: e.target.files[0],
+                    electricity_bill: e.target.files[0],
                   })
                 }
                 margin="normal"
@@ -273,7 +297,7 @@ export default function TrainerManagement() {
                 onChange={(e) =>
                   setSelectedFile({
                     ...selectedFile,
-                    pan_card: e.target.files[0],
+                    bank_statement: e.target.files[0],
                   })
                 }
                 margin="normal"
@@ -294,7 +318,7 @@ export default function TrainerManagement() {
         <div className="col-md-8">
           <KTCodeExample
             // jsCode={jsCode4}
-            beforeCodeTitle="View Trainer"
+            beforeCodeTitle="View Gym"
             // codeBlockHeight="400px"
           >
             <Paper className={classes4.root}>
@@ -311,7 +335,6 @@ export default function TrainerManagement() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {console.log(getData)}
                   {getData?.map((row) => (
                     <TableRow key={row.uid}>
                       <TableCell component="th" scope="row">
