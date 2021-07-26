@@ -57,6 +57,7 @@ export function InputsPage() {
         path="/google-material/inputs/transfer-list"
         component={UserManagement}
       />
+
       {/* <ContentRoute
         path="/google-material/inputs/user-management"
         component={UserManagement}
