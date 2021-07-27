@@ -169,10 +169,10 @@ export default function BenefitManagement() {
       return setError({ gym_id: "*GYM Id is mandatary" });
     }
     if (values.name === "") {
-      return setError({ gym_id: "*Name is mandatary" });
+      return setError({ name: "*Name is mandatary" });
     }
     if (values.breif === "") {
-      return setError({ gym_id: "*Breif is mandatary" });
+      return setError({ breif: "*Breif is mandatary" });
     }
 
     // POST request using fetch inside useEffect React hook
@@ -185,16 +185,24 @@ export default function BenefitManagement() {
       body: data,
     };
     fetch("http://13.232.102.139:9000/benefits/add/", requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        // setSuccessSnackBarOpen(true);
-        // setMessage({
-        //   type: "success",
-        //   message: "Benefit Added Successfully",
-        // });
-        // fetchGetData();
-      });
+      .then((response) => {
+        if (response.ok) {
+          fetchGetData();
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "success",
+            message: "Benefit Added Successfully",
+          });
+        } else {
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "error",
+            message: "Benefit Added failed",
+          });
+        }
+        response.json();
+      })
+      .then((data) => {});
   };
 
   const getParticularBenefit = (id) => {
@@ -229,10 +237,10 @@ export default function BenefitManagement() {
       return setError({ gym_id: "*GYM Id is mandatary" });
     }
     if (values.name === "") {
-      return setError({ gym_id: "*Name is mandatary" });
+      return setError({ name: "*Name is mandatary" });
     }
     if (values.breif === "") {
-      return setError({ gym_id: "*Breif is mandatary" });
+      return setError({ breif: "*Breif is mandatary" });
     }
 
     const requestOptions = {
@@ -293,7 +301,7 @@ export default function BenefitManagement() {
         } else {
           // error
           setMessage({
-            type: "success",
+            type: "error",
             message: "Benefits deletion failed",
           });
         }

@@ -104,15 +104,21 @@ export default function OfferManagement() {
 
   const [error, setError] = useState({
     gym_id: "",
-    equipment: "",
-    quantity: "",
-    brand: "",
+    name: "",
+    code: "",
+    validity: "",
+    mode: "",
+    type: "",
+    value: "",
   });
   const [values, setValues] = useState({
     gym_id: "",
-    equipment: "",
-    quantity: "",
-    brand: "",
+    name: "",
+    code: "",
+    validity: "",
+    mode: "",
+    type: "",
+    value: "",
   });
 
   useEffect(() => {
@@ -123,7 +129,7 @@ export default function OfferManagement() {
   }, []);
 
   const fetchGetData = () => {
-    fetch("http://13.232.102.139:9000/equipment/", {
+    fetch("http://13.232.102.139:9000/offer/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -132,12 +138,12 @@ export default function OfferManagement() {
     })
       .then((response) => response.json())
       .then((responseJson) => {
+        console.log(responseJson.data);
         setGetData(responseJson.data);
       });
   };
 
   const handleChange = (name) => (event) => {
-    console.log(event)
     setValues({ ...values, [name]: event.target.value });
   };
 
@@ -161,15 +167,25 @@ export default function OfferManagement() {
     if (values.gym_id === "") {
       return setError({ gym_id: "*GYM Id is mandatary" });
     }
-    if (values.equipment === "") {
-      return setError({ gym_id: "*Equipment is mandatary" });
+    if (values.name === "") {
+      return setError({ name: "*Name is mandatary" });
     }
-    if (values.quantity === "") {
-      return setError({ gym_id: "*Quantity is mandatary" });
+    if (values.code === "") {
+      return setError({ code: "*Code is mandatary" });
     }
-    if (values.brand === "") {
-      return setError({ gym_id: "*Brand is mandatary" });
+    if (values.validity === "") {
+      return setError({ validity: "*Validty is mandatary" });
     }
+    if (values.mode === "") {
+      return setError({ mode: "*Mode is mandatary" });
+    }
+    if (values.type === "") {
+      return setError({ type: "*Type is mandatary" });
+    }
+    if (values.value === "") {
+      return setError({ value: "*Value is mandatary" });
+    }
+    console.log(values)
     // POST request using fetch inside useEffect React hook
     const requestOptions = {
       method: "POST",
@@ -179,25 +195,38 @@ export default function OfferManagement() {
       },
       body: JSON.stringify(values),
     };
-    fetch("http://13.232.102.139:9000/equipment/add/", requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        setSuccessSnackBarOpen(true);
-        setMessage({
-          type: "success",
-          message: "Equipment Added Successfully",
-        });
-        fetchGetData();
-      });
+    fetch("http://13.232.102.139:9000/offer/add/", requestOptions)
+      .then((response) => {
+        if (response.ok) {
+          fetchGetData();
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "success",
+            message: "Offer Added Successfully",
+          });
+        } else {
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "error",
+            message: "Offer Added failed",
+          });
+        }
+
+        return response.json();
+      })
+      .then((data) => {});
   };
 
   const getParticularEquipment = (id) => {
     if (editModalOpen.open) {
       setValues({
         gym_id: "",
-        equipment: "",
-        quantity: "",
-        brand: "",
+        name: "",
+        code: "",
+        validity: "",
+        mode: "",
+        type: "",
+        value: "",
       });
       return setEditModalOpen({ open: false, id: null });
     }
@@ -206,13 +235,38 @@ export default function OfferManagement() {
     let equipment = getData.filter((data) => data.uid === id);
     setValues({
       gym_id: equipment[0].gym_id,
-      equipment: equipment[0].equipment,
-      quantity: equipment[0].quantity,
-      brand: equipment[0].brand,
+      name: equipment[0].name,
+      code: equipment[0].code,
+      validity: equipment[0].validity,
+      mode: equipment[0].mode,
+      type: equipment[0].type,
+      value: equipment[0].value,
     });
   };
 
   const updateData = () => {
+    if (values.gym_id === "") {
+      return setError({ gym_id: "*GYM Id is mandatary" });
+    }
+    if (values.name === "") {
+      return setError({ name: "*Name is mandatary" });
+    }
+    if (values.code === "") {
+      return setError({ code: "*Code is mandatary" });
+    }
+    if (values.validity === "") {
+      return setError({ validity: "*Validty is mandatary" });
+    }
+    if (values.mode === "") {
+      return setError({ mode: "*Mode is mandatary" });
+    }
+    if (values.type === "") {
+      return setError({ type: "*Type is mandatary" });
+    }
+    if (values.value === "") {
+      return setError({ value: "*Value is mandatary" });
+    }
+
     const requestOptions = {
       method: "PUT",
       headers: {
@@ -221,14 +275,14 @@ export default function OfferManagement() {
       },
       body: JSON.stringify({ equipment_id: editModalOpen.id, ...values }),
     };
-    fetch("http://13.232.102.139:9000/equipment/update", requestOptions).then(
+    fetch("http://13.232.102.139:9000/offer/update", requestOptions).then(
       (response) => {
         if (response.ok) {
           // success
           setSuccessSnackBarOpen(true);
           setMessage({
             type: "success",
-            message: "Equipment Updated Successfully",
+            message: "Offer Updated Successfully",
           });
           fetchGetData();
           setValues({
@@ -241,7 +295,7 @@ export default function OfferManagement() {
           // error
           setMessage({
             type: "error",
-            message: "Equipment Updation failed",
+            message: "Offer Updation failed",
           });
         }
       }
@@ -257,7 +311,7 @@ export default function OfferManagement() {
       },
       body: JSON.stringify({ uid: id }),
     };
-    fetch("http://13.232.102.139:9000/equipment/delete", requestOptions).then(
+    fetch("http://13.232.102.139:9000/offer/delete", requestOptions).then(
       (response) => {
         if (response.ok) {
           // success
@@ -286,7 +340,7 @@ export default function OfferManagement() {
           <KTCodeExample
             jsCode={jsCode1}
             beforeCodeTitle={`${
-              !editModalOpen.open ? "Add Equipment" : "Update Equipment"
+              !editModalOpen.open ? "Add Offer" : "Update Offer"
             }`}
             codeBlockHeight="400px"
           >
@@ -336,36 +390,69 @@ export default function OfferManagement() {
               <TextField
                 // error
                 id="outlined-error"
-                name="equipment"
-                label="Equipment"
+                name="name"
+                label="Name"
                 className={classes2.textField}
                 margin="normal"
                 variant="outlined"
-                value={values.equipment}
-                onChange={handleChange("equipment")}
+                value={values.name}
+                onChange={handleChange("name")}
               />
               <TextField
                 // error
                 id="outlined-error"
-                name="quantity"
-                label="Quantity"
+                name="code"
+                label="Code"
                 className={classes2.textField}
                 margin="normal"
                 variant="outlined"
-                value={values.quantity}
-                onChange={handleChange("quantity")}
+                value={values.code}
+                onChange={handleChange("code")}
               />
 
               <TextField
                 // error
                 id="outlined-error"
-                name="brand"
-                label="Brand"
+                name="validity"
+                label="Validity"
                 className={classes2.textField}
                 margin="normal"
                 variant="outlined"
-                value={values.brand}
-                onChange={handleChange("brand")}
+                value={values.validity}
+                onChange={handleChange("validity")}
+              />
+              <TextField
+                // error
+                id="outlined-error"
+                name="mode"
+                label="Mode"
+                className={classes2.textField}
+                margin="normal"
+                variant="outlined"
+                value={values.mode}
+                onChange={handleChange("mode")}
+              />
+              <TextField
+                // error
+                id="outlined-error"
+                name="type"
+                label="Type"
+                className={classes2.textField}
+                margin="normal"
+                variant="outlined"
+                value={values.type}
+                onChange={handleChange("type")}
+              />
+              <TextField
+                // error
+                id="outlined-error"
+                name="value"
+                label="Value"
+                className={classes2.textField}
+                margin="normal"
+                variant="outlined"
+                value={values.value}
+                onChange={handleChange("value")}
               />
               <Button
                 variant="contained"
@@ -381,7 +468,7 @@ export default function OfferManagement() {
         <div className="col-md-8">
           <KTCodeExample
             jsCode={jsCode1}
-            beforeCodeTitle="View Equipment"
+            beforeCodeTitle="View Offer"
             codeBlockHeight="400px"
           >
             <Paper className={classes4.root}>

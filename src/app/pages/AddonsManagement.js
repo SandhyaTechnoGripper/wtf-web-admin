@@ -80,399 +80,371 @@ const useStyles2 = makeStyles((theme) => ({
 }));
 
 export default function AddonsManagement() {
-                 const { authToken } = useSelector(
-                   ({ auth }) => ({
-                     authToken: auth.authToken,
-                   }),
-                   shallowEqual
-                 );
-                 //update equipment
-                 const classes3 = useStyles3();
-                 //view equipment
-                 const classes4 = useStyles4();
-                 // add equipment
-                 const classes2 = useStyles2();
+  const { authToken } = useSelector(
+    ({ auth }) => ({
+      authToken: auth.authToken,
+    }),
+    shallowEqual
+  );
+  //update equipment
+  const classes3 = useStyles3();
+  //view equipment
+  const classes4 = useStyles4();
+  // add equipment
+  const classes2 = useStyles2();
 
-                 const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(
-                   false
-                 );
-                 const [message, setMessage] = useState({
-                   type: "suceess",
-                   message: "",
-                 });
-                 const [editModalOpen, setEditModalOpen] = useState({
-                   open: false,
-                   id: null,
-                 });
-                 const [getData, setGetData] = useState([]);
-                 const [getGymData, setGymData] = useState([]);
+  const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
+  const [message, setMessage] = useState({
+    type: "suceess",
+    message: "",
+  });
+  const [editModalOpen, setEditModalOpen] = useState({
+    open: false,
+    id: null,
+  });
+  const [getData, setGetData] = useState([]);
+  const [getGymData, setGymData] = useState([]);
 
-                 const [error, setError] = useState({
-                   gym_id: "",
-                   equipment: "",
-                   quantity: "",
-                   brand: "",
-                 });
-                 const [values, setValues] = useState({
-                   gym_id: "",
-                   equipment: "",
-                   quantity: "",
-                   brand: "",
-                 });
+  const [error, setError] = useState({
+    gym_id: "",
+    name: "",
+    description: "",
+    price: "",
+  });
+  const [values, setValues] = useState({
+    gym_id: "",
+    name: "",
+    description: "",
+    price: "",
+  });
 
-                 useEffect(() => {
-                   if (authToken) {
-                     fetchGymData();
-                     fetchGetData();
-                   }
-                 }, []);
+  useEffect(() => {
+    if (authToken) {
+      fetchGymData();
+      fetchGetData();
+    }
+  }, []);
 
-                 const fetchGetData = () => {
-                   fetch("http://13.232.102.139:9000/equipment/", {
-                     method: "GET",
-                     headers: {
-                       "Content-Type": "application/json",
-                       Authorization: `Bearer ${authToken}`,
-                     },
-                   })
-                     .then((response) => response.json())
-                     .then((responseJson) => {
-                       setGetData(responseJson.data);
-                     });
-                 };
+  const fetchGetData = () => {
+    fetch("http://13.232.102.139:9000/equipment/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setGetData(responseJson.data);
+      });
+  };
 
-                 const handleChange = (name) => (event) => {
-                   console.log(event);
-                   setValues({ ...values, [name]: event.target.value });
-                 };
+  const handleChange = (name) => (event) => {
+    console.log(event);
+    setValues({ ...values, [name]: event.target.value });
+  };
 
-                 const fetchGymData = () => {
-                   fetch("http://13.232.102.139:9000/gym/", {
-                     method: "GET",
-                     headers: {
-                       // 'Content-Type': 'application/json',
-                       Authorization: `Bearer ${authToken}`,
-                     },
-                   })
-                     .then((response) => response.json())
-                     .then((responseJson) => {
-                       setGymData(responseJson.data);
-                     });
-                 };
+  const fetchGymData = () => {
+    fetch("http://13.232.102.139:9000/addon/", {
+      method: "GET",
+      headers: {
+        // 'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setGymData(responseJson.data);
+      });
+  };
 
-                 const equipAdd = (e) => {
-                   e.preventDefault();
+  const equipAdd = (e) => {
+    e.preventDefault();
 
-                   if (values.gym_id === "") {
-                     return setError({ gym_id: "*GYM Id is mandatary" });
-                   }
-                   if (values.equipment === "") {
-                     return setError({ gym_id: "*Equipment is mandatary" });
-                   }
-                   if (values.quantity === "") {
-                     return setError({ gym_id: "*Quantity is mandatary" });
-                   }
-                   if (values.brand === "") {
-                     return setError({ gym_id: "*Brand is mandatary" });
-                   }
-                   // POST request using fetch inside useEffect React hook
-                   const requestOptions = {
-                     method: "POST",
-                     headers: {
-                       "Content-Type": "application/json",
-                       Authorization: `Bearer ${authToken}`,
-                     },
-                     body: JSON.stringify(values),
-                   };
-                   fetch(
-                     "http://13.232.102.139:9000/equipment/add/",
-                     requestOptions
-                   )
-                     .then((response) => response.json())
-                     .then((data) => {
-                       setSuccessSnackBarOpen(true);
-                       setMessage({
-                         type: "success",
-                         message: "Equipment Added Successfully",
-                       });
-                       fetchGetData();
-                     });
-                 };
+    if (values.gym_id === "") {
+      return setError({ gym_id: "*GYM Id is mandatary" });
+    }
+    if (values.name === "") {
+      return setError({ gym_id: "*Equipment is mandatary" });
+    }
+    if (values.description === "") {
+      return setError({ gym_id: "*Quantity is mandatary" });
+    }
+    if (values.brand === "") {
+      return setError({ gym_id: "*Brand is mandatary" });
+    }
+    // POST request using fetch inside useEffect React hook
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify(values),
+    };
+    fetch("http://13.232.102.139:9000/equipment/add/", requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        setSuccessSnackBarOpen(true);
+        setMessage({
+          type: "success",
+          message: "Equipment Added Successfully",
+        });
+        fetchGetData();
+      });
+  };
 
-                 const getParticularEquipment = (id) => {
-                   if (editModalOpen.open) {
-                     setValues({
-                       gym_id: "",
-                       equipment: "",
-                       quantity: "",
-                       brand: "",
-                     });
-                     return setEditModalOpen({ open: false, id: null });
-                   }
+  const getParticularEquipment = (id) => {
+    if (editModalOpen.open) {
+      setValues({
+        gym_id: "",
+        equipment: "",
+        quantity: "",
+        brand: "",
+      });
+      return setEditModalOpen({ open: false, id: null });
+    }
 
-                   setEditModalOpen({ open: true, id: id });
-                   let equipment = getData.filter((data) => data.uid === id);
-                   setValues({
-                     gym_id: equipment[0].gym_id,
-                     equipment: equipment[0].equipment,
-                     quantity: equipment[0].quantity,
-                     brand: equipment[0].brand,
-                   });
-                 };
+    setEditModalOpen({ open: true, id: id });
+    let equipment = getData.filter((data) => data.uid === id);
+    setValues({
+      gym_id: equipment[0].gym_id,
+      equipment: equipment[0].equipment,
+      quantity: equipment[0].quantity,
+      brand: equipment[0].brand,
+    });
+  };
 
-                 const updateData = () => {
-                   const requestOptions = {
-                     method: "PUT",
-                     headers: {
-                       "Content-Type": "application/json",
-                       Authorization: `Bearer ${authToken}`,
-                     },
-                     body: JSON.stringify({
-                       equipment_id: editModalOpen.id,
-                       ...values,
-                     }),
-                   };
-                   fetch(
-                     "http://13.232.102.139:9000/equipment/update",
-                     requestOptions
-                   ).then((response) => {
-                     if (response.ok) {
-                       // success
-                       setSuccessSnackBarOpen(true);
-                       setMessage({
-                         type: "success",
-                         message: "Equipment Updated Successfully",
-                       });
-                       fetchGetData();
-                       setValues({
-                         gym_id: "",
-                         equipment: "",
-                         quantity: "",
-                         brand: "",
-                       });
-                     } else {
-                       // error
-                       setMessage({
-                         type: "error",
-                         message: "Equipment Updation failed",
-                       });
-                     }
-                   });
-                 };
+  const updateData = () => {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({
+        equipment_id: editModalOpen.id,
+        ...values,
+      }),
+    };
+    fetch("http://13.232.102.139:9000/equipment/update", requestOptions).then(
+      (response) => {
+        if (response.ok) {
+          // success
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "success",
+            message: "Equipment Updated Successfully",
+          });
+          fetchGetData();
+          setValues({
+            gym_id: "",
+            equipment: "",
+            quantity: "",
+            brand: "",
+          });
+        } else {
+          // error
+          setMessage({
+            type: "error",
+            message: "Equipment Updation failed",
+          });
+        }
+      }
+    );
+  };
 
-                 const deleteData = (id) => {
-                   const requestOptions = {
-                     method: "PUT",
-                     headers: {
-                       "Content-Type": "application/json",
-                       Authorization: `Bearer ${authToken}`,
-                     },
-                     body: JSON.stringify({ uid: id }),
-                   };
-                   fetch(
-                     "http://13.232.102.139:9000/equipment/delete",
-                     requestOptions
-                   ).then((response) => {
-                     if (response.ok) {
-                       // success
+  const deleteData = (id) => {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ uid: id }),
+    };
+    fetch("http://13.232.102.139:9000/equipment/delete", requestOptions).then(
+      (response) => {
+        if (response.ok) {
+          // success
 
-                       setSuccessSnackBarOpen(true);
-                       setMessage({
-                         type: "success",
-                         message: "Equipment Deleted Successfully",
-                       });
-                       let data = getData.filter((data) => data.uid !== id);
-                       setGetData(data);
-                     } else {
-                       // error
-                       setMessage({
-                         type: "success",
-                         message: "Equipment deletion failed",
-                       });
-                     }
-                   });
-                 };
-                 return (
-                   <>
-                     <div className="row">
-                       <div className="col-md-4">
-                         <KTCodeExample
-                           jsCode={jsCode1}
-                           beforeCodeTitle={`${
-                             !editModalOpen.open
-                               ? "Add Equipment"
-                               : "Update Equipment"
-                           }`}
-                           codeBlockHeight="400px"
-                         >
-                           <span>
-                             <code>TextField</code> supports outlined styling.
-                           </span>
-                           <div className="separator separator-dashed my-7"></div>
-                           <form
-                             className={classes2.container}
-                             noValidate
-                             autoComplete="off"
-                           >
-                             {editModalOpen.open ? (
-                               <TextField
-                                 id="outlined-select-currency"
-                                 select
-                                 name="gym_id"
-                                 label="Gym Name"
-                                 className={classes2.textField}
-                                 value={values.gym_id}
-                                 onChange={handleChange("gym_id")}
-                                 SelectProps={{
-                                   MenuProps: {
-                                     className: classes2.menu,
-                                   },
-                                 }}
-                                 margin="normal"
-                                 variant="outlined"
-                               >
-                                 {getGymData?.length > 0 &&
-                                   getGymData.map((option) => (
-                                     <MenuItem
-                                       key={option.uid}
-                                       value={option.gym_name}
-                                     >
-                                       {option.gym_name}
-                                     </MenuItem>
-                                   ))}
-                               </TextField>
-                             ) : (
-                               <TextField
-                                 // error
-                                 id="outlined-error"
-                                 name="gym_id"
-                                 label="Equipment Id"
-                                 className={classes2.textField}
-                                 margin="normal"
-                                 variant="outlined"
-                                 value={values.gym_id}
-                                 onChange={handleChange("gym_id")}
-                               />
-                             )}
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "success",
+            message: "Equipment Deleted Successfully",
+          });
+          let data = getData.filter((data) => data.uid !== id);
+          setGetData(data);
+        } else {
+          // error
+          setMessage({
+            type: "success",
+            message: "Equipment deletion failed",
+          });
+        }
+      }
+    );
+  };
+  return (
+    <>
+      <div className="row">
+        <div className="col-md-4">
+          <KTCodeExample
+            jsCode={jsCode1}
+            beforeCodeTitle={`${
+              !editModalOpen.open ? "Add Equipment" : "Update Equipment"
+            }`}
+            codeBlockHeight="400px"
+          >
+            <span>
+              <code>TextField</code> supports outlined styling.
+            </span>
+            <div className="separator separator-dashed my-7"></div>
+            <form className={classes2.container} noValidate autoComplete="off">
+              {editModalOpen.open ? (
+                <TextField
+                  id="outlined-select-currency"
+                  select
+                  name="gym_id"
+                  label="Gym Name"
+                  className={classes2.textField}
+                  value={values.gym_id}
+                  onChange={handleChange("gym_id")}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes2.menu,
+                    },
+                  }}
+                  margin="normal"
+                  variant="outlined"
+                >
+                  {getGymData?.length > 0 &&
+                    getGymData.map((option) => (
+                      <MenuItem key={option.uid} value={option.gym_name}>
+                        {option.gym_name}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              ) : (
+                <TextField
+                  // error
+                  id="outlined-error"
+                  name="gym_id"
+                  label="Equipment Id"
+                  className={classes2.textField}
+                  margin="normal"
+                  variant="outlined"
+                  value={values.gym_id}
+                  onChange={handleChange("gym_id")}
+                />
+              )}
 
-                             <TextField
-                               // error
-                               id="outlined-error"
-                               name="equipment"
-                               label="Equipment"
-                               className={classes2.textField}
-                               margin="normal"
-                               variant="outlined"
-                               value={values.equipment}
-                               onChange={handleChange("equipment")}
-                             />
-                             <TextField
-                               // error
-                               id="outlined-error"
-                               name="quantity"
-                               label="Quantity"
-                               className={classes2.textField}
-                               margin="normal"
-                               variant="outlined"
-                               value={values.quantity}
-                               onChange={handleChange("quantity")}
-                             />
+              <TextField
+                // error
+                id="outlined-error"
+                name="equipment"
+                label="Equipment"
+                className={classes2.textField}
+                margin="normal"
+                variant="outlined"
+                value={values.equipment}
+                onChange={handleChange("equipment")}
+              />
+              <TextField
+                // error
+                id="outlined-error"
+                name="quantity"
+                label="Quantity"
+                className={classes2.textField}
+                margin="normal"
+                variant="outlined"
+                value={values.quantity}
+                onChange={handleChange("quantity")}
+              />
 
-                             <TextField
-                               // error
-                               id="outlined-error"
-                               name="brand"
-                               label="Brand"
-                               className={classes2.textField}
-                               margin="normal"
-                               variant="outlined"
-                               value={values.brand}
-                               onChange={handleChange("brand")}
-                             />
-                             <Button
-                               variant="contained"
-                               className={classes3.button}
-                               onClick={
-                                 editModalOpen.open ? updateData : equipAdd
-                               }
-                             >
-                               Submit
-                             </Button>
-                           </form>
-                         </KTCodeExample>
-                       </div>
+              <TextField
+                // error
+                id="outlined-error"
+                name="brand"
+                label="Brand"
+                className={classes2.textField}
+                margin="normal"
+                variant="outlined"
+                value={values.brand}
+                onChange={handleChange("brand")}
+              />
+              <Button
+                variant="contained"
+                className={classes3.button}
+                onClick={editModalOpen.open ? updateData : equipAdd}
+              >
+                Submit
+              </Button>
+            </form>
+          </KTCodeExample>
+        </div>
 
-                       <div className="col-md-8">
-                         <KTCodeExample
-                           jsCode={jsCode1}
-                           beforeCodeTitle="View Equipment"
-                           codeBlockHeight="400px"
-                         >
-                           <Paper className={classes4.root}>
-                             <Table className={classes4.table}>
-                               <TableHead>
-                                 <TableRow>
-                                   <TableCell>GYM Name</TableCell>
-                                   <TableCell align="right">
-                                     Equipment
-                                   </TableCell>
-                                   <TableCell align="right">Quantity</TableCell>
-                                   <TableCell align="right">Brand</TableCell>
-                                   <TableCell align="right">Action</TableCell>
-                                 </TableRow>
-                               </TableHead>
-                               <TableBody>
-                                 {getData?.map((row) => (
-                                   <TableRow key={row.uid}>
-                                     <TableCell component="th" scope="row">
-                                       {row.gym_id}
-                                     </TableCell>
-                                     <TableCell align="right">
-                                       {row.equipment}
-                                     </TableCell>
-                                     <TableCell align="right">
-                                       {row.quantity}
-                                     </TableCell>
-                                     <TableCell align="right">
-                                       {row.brand}
-                                     </TableCell>
-                                     <TableCell align="right">
-                                       <Button
-                                         variant="contained"
-                                         className={classes3.button}
-                                         onClick={() =>
-                                           getParticularEquipment(row.uid)
-                                         }
-                                       >
-                                         Edit
-                                       </Button>
-                                       <Button
-                                         variant="contained"
-                                         className={classes3.button}
-                                         onClick={() => deleteData(row.uid)}
-                                       >
-                                         Delete
-                                       </Button>
-                                     </TableCell>
-                                   </TableRow>
-                                 ))}
-                               </TableBody>
-                             </Table>
-                           </Paper>
-                         </KTCodeExample>
-                       </div>
-                     </div>
-                     <PopUpToast
-                       successSnackBarOpen={successSnackBarOpen}
-                       setSuccessSnackBarOpen={setSuccessSnackBarOpen}
-                       vertical="top"
-                       horizontal="right"
-                       severity={message.type}
-                       message={message.message}
-                     />
-                   </>
-                 );
-               }
+        <div className="col-md-8">
+          <KTCodeExample
+            jsCode={jsCode1}
+            beforeCodeTitle="View Equipment"
+            codeBlockHeight="400px"
+          >
+            <Paper className={classes4.root}>
+              <Table className={classes4.table}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>GYM Name</TableCell>
+                    <TableCell align="right">Equipment</TableCell>
+                    <TableCell align="right">Quantity</TableCell>
+                    <TableCell align="right">Brand</TableCell>
+                    <TableCell align="right">Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {getData?.map((row) => (
+                    <TableRow key={row.uid}>
+                      <TableCell component="th" scope="row">
+                        {row.gym_id}
+                      </TableCell>
+                      <TableCell align="right">{row.equipment}</TableCell>
+                      <TableCell align="right">{row.quantity}</TableCell>
+                      <TableCell align="right">{row.brand}</TableCell>
+                      <TableCell align="right">
+                        <Button
+                          variant="contained"
+                          className={classes3.button}
+                          onClick={() => getParticularEquipment(row.uid)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="contained"
+                          className={classes3.button}
+                          onClick={() => deleteData(row.uid)}
+                        >
+                          Delete
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Paper>
+          </KTCodeExample>
+        </div>
+      </div>
+      <PopUpToast
+        successSnackBarOpen={successSnackBarOpen}
+        setSuccessSnackBarOpen={setSuccessSnackBarOpen}
+        vertical="top"
+        horizontal="right"
+        severity={message.type}
+        message={message.message}
+      />
+    </>
+  );
+}
 
 const jsCode1 = `
 import React from 'react';
