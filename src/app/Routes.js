@@ -23,7 +23,7 @@ export function Routes() {
 
     return (
         <Switch>
-            {isAuthorized ? (
+            {!zisAuthorized ? (
                 /*Render auth page when user at `/auth` and not authorized.*/
                 <Route>
                     <AuthPage />
