@@ -45,7 +45,7 @@ export function HeaderMenu({ layoutProps }) {
             <li
                 data-menu-toggle={layoutProps.menuDesktopToggle}
                 aria-haspopup="true"
-                className={`menu-item menu-item-submenu menu-item-rel ${getMenuItemActive('/react-bootstrap')}`}
+                className={`menu-item menu-item-submenu menu-item-rel ${getMenuItemActive('/gym')}`}
                
             >
                 <NavLink className="menu-link menu-toggle" to="/gym">
@@ -55,12 +55,30 @@ export function HeaderMenu({ layoutProps }) {
                 <div className="menu-submenu menu-submenu-classic menu-submenu-left">
                     <ul className="menu-subnav">
                         {/*begin::2 Level*/}
+                        
+                        <li
+                            className={`menu-item menu-item-submenu ${getMenuItemActive('/gym')}`}
+                            data-menu-toggle="hover"
+                            aria-haspopup="true"
+                        >
+                            <NavLink className="menu-link" to="/gym">
+                                <span className="svg-icon menu-icon">
+                                    <SVG src={toAbsoluteUrl("/media/svg/icons/Design/PenAndRuller.svg")} />
+                                </span>
+                                <span className="menu-text">
+                                    Gym Management
+                                </span>
+                                
+                            </NavLink>
+                            
+                        </li>
+
                         <li
                             className={`menu-item menu-item-submenu ${getMenuItemActive('/google-material/inputs')}`}
                             data-menu-toggle="hover"
                             aria-haspopup="true"
                         >
-                            <NavLink className="menu-link menu-toggle" to="/google-material/inputs">
+                            <NavLink className="menu-link" to="/equip">
                                 <span className="svg-icon menu-icon">
                                     <SVG src={toAbsoluteUrl("/media/svg/icons/Design/PenAndRuller.svg")} />
                                 </span>
@@ -79,7 +97,7 @@ export function HeaderMenu({ layoutProps }) {
                             data-menu-toggle="hover"
                             aria-haspopup="true"
                         >
-                            <NavLink className="menu-link menu-toggle" to="/google-material/navigation">
+                            <NavLink className="menu-link" to="/addons">
                                 <span className="svg-icon menu-icon">
                                     <SVG src={toAbsoluteUrl("/media/svg/icons/Navigation/Arrow-from-left.svg")} />
                                 </span>
@@ -98,7 +116,7 @@ export function HeaderMenu({ layoutProps }) {
                             data-menu-toggle="hover"
                             aria-haspopup="true"
                         >
-                            <NavLink className="menu-link menu-toggle" to="/google-material/surfaces">
+                            <NavLink className="menu-link" to="/benefit">
                                 <span className="svg-icon menu-icon">
                                     <SVG src={toAbsoluteUrl("/media/svg/icons/Layout/Layout-left-panel-1.svg")} />
                                 </span>
@@ -117,7 +135,7 @@ export function HeaderMenu({ layoutProps }) {
                             data-menu-toggle="hover"
                             aria-haspopup="true"
                         >
-                            <NavLink className="menu-link menu-toggle" to="/google-material/feedback">
+                            <NavLink className="menu-link " to="/gallery">
                                 <span className="svg-icon menu-icon">
                                     <SVG src={toAbsoluteUrl("/media/svg/icons/General/Half-star.svg")} />
                                 </span>
@@ -136,7 +154,7 @@ export function HeaderMenu({ layoutProps }) {
                             data-menu-toggle="hover"
                             aria-haspopup="true"
                         >
-                            <NavLink className="menu-link menu-toggle" to="/google-material/data-displays">
+                            <NavLink className="menu-link " to="/offers">
                                 <span className="svg-icon menu-icon">
                                     <SVG src={toAbsoluteUrl("/media/svg/icons/Devices/iMac.svg")} />
                                 </span>
@@ -155,7 +173,7 @@ export function HeaderMenu({ layoutProps }) {
                             data-menu-toggle="hover"
                             aria-haspopup="true"
                         >
-                            <NavLink className="menu-link menu-toggle" to="/google-material/utils">
+                            <NavLink className="menu-link" to="/events">
                                 <span className="svg-icon menu-icon">
                                     <SVG src={toAbsoluteUrl("/media/svg/icons/Tools/Swiss-knife.svg")} />
                                 </span>
@@ -173,7 +191,7 @@ export function HeaderMenu({ layoutProps }) {
                             data-menu-toggle="hover"
                             aria-haspopup="true"
                         >
-                            <NavLink className="menu-link menu-toggle" to="/google-material/layout">
+                            <NavLink className="menu-link" to="/feedback">
                                 <span className="svg-icon menu-icon">
                                     <SVG src={toAbsoluteUrl("/media/svg/icons/Layout/Layout-top-panel-2.svg")} />
                                 </span>

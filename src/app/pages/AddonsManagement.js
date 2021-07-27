@@ -92,7 +92,7 @@ export default function AddonsManagement() {
                  const classes4 = useStyles4();
                  // add equipment
                  const classes2 = useStyles2();
-
+               
                  const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(
                    false
                  );
@@ -105,21 +105,24 @@ export default function AddonsManagement() {
                    id: null,
                  });
                  const [getData, setGetData] = useState([]);
+                 const [images, setImages ] = useState({
+                   images:null
+                 })
                  const [getGymData, setGymData] = useState([]);
 
                  const [error, setError] = useState({
                    gym_id: "",
-                   equipment: "",
-                   quantity: "",
-                   brand: "",
+                   name: "",
+                   description: "",
+                   price: "",
                  });
                  const [values, setValues] = useState({
-                   gym_id: "",
-                   equipment: "",
-                   quantity: "",
-                   brand: "",
+                  gym_id: "",
+                  name: "",
+                  description: "",
+                  price: "",
                  });
-
+                 
                  useEffect(() => {
                    if (authToken) {
                      fetchGymData();
@@ -128,7 +131,7 @@ export default function AddonsManagement() {
                  }, []);
 
                  const fetchGetData = () => {
-                   fetch("http://13.232.102.139:9000/equipment/", {
+                   fetch("http://13.232.102.139:9000/addon/", {
                      method: "GET",
                      headers: {
                        "Content-Type": "application/json",
@@ -145,7 +148,7 @@ export default function AddonsManagement() {
                    console.log(event);
                    setValues({ ...values, [name]: event.target.value });
                  };
-
+                   
                  const fetchGymData = () => {
                    fetch("http://13.232.102.139:9000/gym/", {
                      method: "GET",
@@ -161,8 +164,16 @@ export default function AddonsManagement() {
                  };
 
                  const equipAdd = (e) => {
-                   e.preventDefault();
+                 const data = new FormData();
+                 data.append("gym_id",values.gym_id);
+                 data.append("name",values.name);
+                 data.append("description",values.description);
+                 data.append("images",images.images);
+                 data.append("price",values.price);
+                 data.append("user_id", "T6JNqwknrAaxg");
 
+                   e.preventDefault();
+                   
                    if (values.gym_id === "") {
                      return setError({ gym_id: "*GYM Id is mandatary" });
                    }
@@ -176,16 +187,18 @@ export default function AddonsManagement() {
                      return setError({ gym_id: "*Brand is mandatary" });
                    }
                    // POST request using fetch inside useEffect React hook
+                   
+
                    const requestOptions = {
                      method: "POST",
                      headers: {
                        "Content-Type": "application/json",
                        Authorization: `Bearer ${authToken}`,
                      },
-                     body: JSON.stringify(values),
+                     body: data,
                    };
                    fetch(
-                     "http://13.232.102.139:9000/equipment/add/",
+                     "http://13.232.102.139:9000/addon/add",
                      requestOptions
                    )
                      .then((response) => response.json())
@@ -193,7 +206,7 @@ export default function AddonsManagement() {
                        setSuccessSnackBarOpen(true);
                        setMessage({
                          type: "success",
-                         message: "Equipment Added Successfully",
+                         message: "Addons Added Successfully",
                        });
                        fetchGetData();
                      });
@@ -233,7 +246,7 @@ export default function AddonsManagement() {
                      }),
                    };
                    fetch(
-                     "http://13.232.102.139:9000/equipment/update",
+                     "http://13.232.102.139:9000/addon/update",
                      requestOptions
                    ).then((response) => {
                      if (response.ok) {
@@ -241,7 +254,7 @@ export default function AddonsManagement() {
                        setSuccessSnackBarOpen(true);
                        setMessage({
                          type: "success",
-                         message: "Equipment Updated Successfully",
+                         message: "Addons Updated Successfully",
                        });
                        fetchGetData();
                        setValues({
@@ -254,7 +267,7 @@ export default function AddonsManagement() {
                        // error
                        setMessage({
                          type: "error",
-                         message: "Equipment Updation failed",
+                         message: "Addons Updation failed",
                        });
                      }
                    });
@@ -270,7 +283,7 @@ export default function AddonsManagement() {
                      body: JSON.stringify({ uid: id }),
                    };
                    fetch(
-                     "http://13.232.102.139:9000/equipment/delete",
+                     "http://13.232.102.139:9000/addon/delete",
                      requestOptions
                    ).then((response) => {
                      if (response.ok) {
@@ -279,7 +292,7 @@ export default function AddonsManagement() {
                        setSuccessSnackBarOpen(true);
                        setMessage({
                          type: "success",
-                         message: "Equipment Deleted Successfully",
+                         message: "Addons Deleted Successfully",
                        });
                        let data = getData.filter((data) => data.uid !== id);
                        setGetData(data);
@@ -287,7 +300,7 @@ export default function AddonsManagement() {
                        // error
                        setMessage({
                          type: "success",
-                         message: "Equipment deletion failed",
+                         message: "Addons deletion failed",
                        });
                      }
                    });
@@ -295,13 +308,13 @@ export default function AddonsManagement() {
                  return (
                    <>
                      <div className="row">
-                       <div className="col-md-4">
+                       <div className="col-md-3">
                          <KTCodeExample
                            jsCode={jsCode1}
                            beforeCodeTitle={`${
                              !editModalOpen.open
-                               ? "Add Equipment"
-                               : "Update Equipment"
+                               ? "Add Addons"
+                               : "Update Addons"
                            }`}
                            codeBlockHeight="400px"
                          >
@@ -319,7 +332,7 @@ export default function AddonsManagement() {
                                  id="outlined-select-currency"
                                  select
                                  name="gym_id"
-                                 label="Gym Name"
+                                 label="Gym Id"
                                  className={classes2.textField}
                                  value={values.gym_id}
                                  onChange={handleChange("gym_id")}
@@ -335,9 +348,9 @@ export default function AddonsManagement() {
                                    getGymData.map((option) => (
                                      <MenuItem
                                        key={option.uid}
-                                       value={option.gym_name}
+                                       value={option.gym_id}
                                      >
-                                       {option.gym_name}
+                                       {option.name}
                                      </MenuItem>
                                    ))}
                                </TextField>
@@ -345,49 +358,51 @@ export default function AddonsManagement() {
                                <TextField
                                  // error
                                  id="outlined-error"
-                                 name="gym_id"
-                                 label="Equipment Id"
+                                 name="name"
+                                 label="Name"
                                  className={classes2.textField}
                                  margin="normal"
                                  variant="outlined"
-                                 value={values.gym_id}
-                                 onChange={handleChange("gym_id")}
+                                 value={values.name}
+                                 onChange={handleChange("name")}
                                />
                              )}
 
                              <TextField
                                // error
-                               id="outlined-error"
-                               name="equipment"
-                               label="Equipment"
+                               id="outlined"
+                               name="description"
+                               label="Description"
                                className={classes2.textField}
                                margin="normal"
                                variant="outlined"
-                               value={values.equipment}
-                               onChange={handleChange("equipment")}
+                               value={values.description}
+                               onChange={handleChange("description")}
                              />
                              <TextField
                                // error
                                id="outlined-error"
-                               name="quantity"
-                               label="Quantity"
+                               name="image"
+                               label="Image"
+                               type="file"
                                className={classes2.textField}
                                margin="normal"
                                variant="outlined"
-                               value={values.quantity}
-                               onChange={handleChange("quantity")}
+                               value={values.images}
+                               onChange={(e) => setImages({...images, images : e.target.files[0]})}
                              />
 
                              <TextField
                                // error
                                id="outlined-error"
-                               name="brand"
-                               label="Brand"
+                               name="price"
+                               label="Price"
+                               type="text"
                                className={classes2.textField}
                                margin="normal"
                                variant="outlined"
-                               value={values.brand}
-                               onChange={handleChange("brand")}
+                               value={values.price}
+                               onChange={handleChange("price")}
                              />
                              <Button
                                variant="contained"
@@ -402,40 +417,33 @@ export default function AddonsManagement() {
                          </KTCodeExample>
                        </div>
 
-                       <div className="col-md-8">
+                       <div className="col-md-9">
                          <KTCodeExample
                            jsCode={jsCode1}
-                           beforeCodeTitle="View Equipment"
+                           beforeCodeTitle="View Addons"
                            codeBlockHeight="400px"
                          >
                            <Paper className={classes4.root}>
                              <Table className={classes4.table}>
                                <TableHead>
                                  <TableRow>
-                                   <TableCell>GYM Name</TableCell>
+                                   <TableCell>GYM Id</TableCell>
                                    <TableCell align="right">
-                                     Equipment
+                                     Name
                                    </TableCell>
-                                   <TableCell align="right">Quantity</TableCell>
-                                   <TableCell align="right">Brand</TableCell>
-                                   <TableCell align="right">Action</TableCell>
+                                   <TableCell align="right">Description</TableCell>
+                                   <TableCell align="right">image</TableCell>
+                                   <TableCell align="right">Price</TableCell>
                                  </TableRow>
                                </TableHead>
                                <TableBody>
                                  {getData?.map((row) => (
                                    <TableRow key={row.uid}>
-                                     <TableCell component="th" scope="row">
-                                       {row.gym_id}
-                                     </TableCell>
-                                     <TableCell align="right">
-                                       {row.equipment}
-                                     </TableCell>
-                                     <TableCell align="right">
-                                       {row.quantity}
-                                     </TableCell>
-                                     <TableCell align="right">
-                                       {row.brand}
-                                     </TableCell>
+                                     <TableCell component="th" scope="row">{row.gym_id}</TableCell>
+                                     <TableCell align="right">{row.name}</TableCell>
+                                     <TableCell align="right">{row.description}</TableCell>
+                                     <TableCell align="right">{row.image}</TableCell>
+                                     <TableCell align="right">{row.price}</TableCell>
                                      <TableCell align="right">
                                        <Button
                                          variant="contained"
