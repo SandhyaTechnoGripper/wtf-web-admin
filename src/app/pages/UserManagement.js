@@ -13,10 +13,7 @@ import {
   createMuiTheme,
 } from "@material-ui/core/styles";
 
-import {
-  Notice,
-  KTCodeExample,
-} from "../../../../_metronic/_partials/controls";
+import { Notice, KTCodeExample } from "../../_metronic/_partials/controls";
 import MenuItem from "@material-ui/core/MenuItem";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -25,7 +22,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
-import GoogleMaterialPage from "../GoogleMaterialPage";
 
 // Submit
 const useStyles3 = makeStyles((theme) => ({

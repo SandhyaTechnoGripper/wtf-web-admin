@@ -15,7 +15,7 @@ import {
 import {
   Notice,
   KTCodeExample,
-} from "../../../../_metronic/_partials/controls";
+} from "../../_metronic/_partials/controls";
 import MenuItem from "@material-ui/core/MenuItem";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -25,7 +25,6 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import { getDate } from "date-fns";
-import { getUserByToken } from "../../Auth/_redux/authCrud";
 
 // Submit
 const useStyles3 = makeStyles((theme) => ({
@@ -37,16 +36,6 @@ const useStyles3 = makeStyles((theme) => ({
   },
 }));
 
-const currencies = [
-  {
-    value: "Active",
-    label: "Active",
-  },
-  {
-    value: "Inactive",
-    label: "Inactive",
-  },
-];
 
 //view user
 const useStyles4 = makeStyles((theme) => ({

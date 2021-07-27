@@ -5,10 +5,10 @@ import { BuilderPage } from "./pages/BuilderPage";
 import { MyPage } from "./pages/MyPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import EditUser from "./pages/editUser";
-import TrainerManagement from "./modules/GoogleMaterialExamples/inputs/TrainerManagement";
-import UserManagement from "./modules/GoogleMaterialExamples/inputs/UserManagement";
-import GymManagement from "./modules/GoogleMaterialExamples/inputs/GymManagement";
-import EquipmentManagement from "./modules/GoogleMaterialExamples/inputs/EquipmentManagement";
+import TrainerManagement from "./pages/TrainerManagement"
+import UserManagement from "./pages/UserManagement";
+import GymManagement from "./pages/GymManagement";
+import EquipmentManagement from "./pages/EquipmentManagement";
 
 const GoogleMaterialPage = lazy(() =>
   import("./modules/GoogleMaterialExamples/GoogleMaterialPage")
