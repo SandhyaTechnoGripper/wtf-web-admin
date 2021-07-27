@@ -1,7 +1,6 @@
 /* eslint-disable no-restricted-imports */
 import React, { useState, useEffect } from "react";
 import { shallowEqual, useSelector } from "react-redux";
-import axios from "axios";
 import clsx from "clsx";
 import { TextField, InputBase } from "@material-ui/core";
 import { useHistory, useParams } from "react-router-dom";
@@ -22,6 +21,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
+import PopUpToast from "../../_metronic/layout/components/PopUpToast/PopUpToast";
 
 // Submit
 const useStyles3 = makeStyles((theme) => ({
@@ -71,11 +71,31 @@ export default function UserManagement() {
   const classes4 = useStyles4();
 
   const classes2 = useStyles2();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [password, setPassword] = useState("");
-  const [account_type, setAccount_type] = useState("");
+  const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
+  const [message, setMessage] = useState({
+    type: "suceess",
+    message: "",
+  });
+
+  const [editModalOpen, setEditModalOpen] = useState({
+    open: false,
+    id: null,
+  });
+
+  const [error, setError] = useState({
+    name: "",
+    email: "",
+    mobile: "",
+    password: "",
+    account_type: "",
+  });
+  const [values, setValues] = useState({
+    name: "",
+    email: "",
+    mobile: "",
+    password: "",
+    account_type: "",
+  });
   const [getData, setGetData] = useState([]);
 
   const { authToken } = useSelector(
@@ -90,6 +110,10 @@ export default function UserManagement() {
       fetchGetData();
     }
   }, []);
+
+  const handleChange = (name) => (event) => {
+    setValues({ ...values, [name]: event.target.value });
+  };
 
   const fetchGetData = () => {
     fetch("http://13.232.102.139:9000/user/", {
@@ -107,24 +131,170 @@ export default function UserManagement() {
 
   function Useradd(e) {
     e.preventDefault();
-    const postData = {
-      name,
-      email,
-      mobile,
-      password,
-      account_type,
-    };
+
+    if (values.name === "") {
+      return setError({ name: "*Name is mandatary" });
+    }
+    if (
+      !values.email ||
+      !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        values.email
+      )
+    ) {
+      return setError({ email: "*Please enter valid email" });
+    }
+    if (values.mobile <= 0 || values.mobile > 10) {
+      return setError({ mobile: "*Please enter valid email" });
+    }
+    if (values.password === "") {
+      return setError({ password: "*Password is mandatary" });
+    }
+    if (values.account_type === "") {
+      return setError({ account_type: "*Account Type is mandatary" });
+    }
 
     // POST request using fetch inside useEffect React hook
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(postData),
+      body: JSON.stringify(values),
     };
     fetch("http://13.232.102.139:9000/user/add", requestOptions)
-      .then((response) => response.json())
-      .then((data) => postData);
+      .then((response) => {
+        if (response.ok) {
+          fetchGetData();
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "success",
+            message: "User Added Successfully",
+          });
+        } else {
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "error",
+            message: "User Addition failed",
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {});
   }
+
+  const getParticularUser = (id) => {
+    if (editModalOpen.open) {
+      setValues({
+        name: "",
+        email: "",
+        mobile: "",
+        password: "",
+        account_type: "",
+      });
+      return setEditModalOpen({ open: false, id: null });
+    }
+
+    setEditModalOpen({ open: true, id: id });
+    let equipment = getData.filter((data) => data.uid === id);
+    setValues({
+      name: equipment[0].name,
+      email: equipment[0].email,
+      mobile: equipment[0].mobile,
+      password: equipment[0].password,
+      account_type: equipment[0].account_type,
+    });
+  };
+
+  const updateData = (e) => {
+    e.preventDefault();
+
+    if (values.name === "") {
+      return setError({ name: "*Name is mandatary" });
+    }
+    if (
+      !values.email ||
+      !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        values.email
+      )
+    ) {
+      return setError({ email: "*Please enter valid email" });
+    }
+    if (values.mobile <= 0 || values.mobile > 10) {
+      return setError({ mobile: "*Please enter valid email" });
+    }
+    if (values.password === "") {
+      return setError({ password: "*Password is mandatary" });
+    }
+    if (values.account_type === "") {
+      return setError({ account_type: "*Account Type is mandatary" });
+    }
+
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ id: editModalOpen.id, ...values }),
+    };
+    fetch("http://13.232.102.139:9000/equipment/update", requestOptions).then(
+      (response) => {
+        if (response.ok) {
+          // success
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "success",
+            message: "User Updated Successfully",
+          });
+          fetchGetData();
+          setValues({
+            name: "",
+            email: "",
+            mobile: "",
+            password: "",
+            account_type: "",
+          });
+        } else {
+          // error
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "error",
+            message: "User Updation failed",
+          });
+        }
+      }
+    );
+  };
+
+  const deleteData = (id) => {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ uid: id }),
+    };
+    fetch("http://13.232.102.139:9000/equipment/delete", requestOptions).then(
+      (response) => {
+        if (response.ok) {
+          // success
+
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "success",
+            message: "User Deleted Successfully",
+          });
+          let data = getData.filter((data) => data.uid !== id);
+          setGetData(data);
+        } else {
+          // error
+          setMessage({
+            type: "success",
+            message: "User deletion failed",
+          });
+        }
+      }
+    );
+  };
 
   return (
     <>
@@ -132,7 +302,9 @@ export default function UserManagement() {
         <div className="col-md-3">
           <KTCodeExample
             jsCode={jsCode2}
-            beforeCodeTitle="Add User"
+            beforeCodeTitle={`${
+              !editModalOpen.open ? "Add User" : "Update User"
+            }`}
             codeBlockHeight="400px"
           >
             <span>
@@ -144,8 +316,8 @@ export default function UserManagement() {
                 id="outlined-name"
                 label="Name"
                 className={classes2.textField}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={values.name}
+                onChange={handleChange("name")}
                 margin="normal"
                 variant="outlined"
               />
@@ -153,9 +325,9 @@ export default function UserManagement() {
               <TextField
                 id="outlined-error"
                 label="Account Type"
-                value={account_type}
+                value={values.account_type}
                 className={classes2.textField}
-                onChange={(e) => setAccount_type(e.target.value)}
+                onChange={handleChange("account_type")}
                 margin="normal"
                 variant="outlined"
               />
@@ -165,58 +337,37 @@ export default function UserManagement() {
                 label="Email"
                 className={classes2.textField}
                 type="email"
-                value={email}
+                value={values.email}
                 autoComplete="email"
                 margin="normal"
                 variant="outlined"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleChange("email")}
               />
               <TextField
                 id="outlined-password-input"
                 label="Password"
                 className={classes2.textField}
                 type="password"
-                value={password}
+                value={values.password}
                 autoComplete="current-password"
                 margin="normal"
                 variant="outlined"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handleChange("password")}
               />
               <TextField
                 id="outlined-read-only-input"
                 label="Phone"
                 type="number"
-                value={mobile}
+                value={values.mobile}
                 className={classes2.textField}
                 margin="normal"
                 variant="outlined"
-                onChange={(e) => setMobile(e.target.value)}
+                onChange={handleChange("mobile")}
               />
-              {/* <TextField
-                id="outlined-select-currency"
-                select
-                label="Status"
-                className={classes2.textField}
-                value={users.currency}
-                onChange={handleChange2("currency")}
-                SelectProps={{
-                  MenuProps: {
-                    className: classes2.menu
-                  }
-                }}
-                margin="normal"
-                variant="outlined"
-              >
-                {currencies.map(option => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField> */}
               <Button
                 variant="contained"
                 className={classes3.button}
-                onClick={Useradd}
+                onClick={editModalOpen.open ? updateData : Useradd}
               >
                 Submit
               </Button>
@@ -239,7 +390,7 @@ export default function UserManagement() {
                     <TableCell align="right">Email</TableCell>
                     <TableCell align="right">Phone</TableCell>
                     <TableCell align="right">Status</TableCell>
-                    <TableCell align="centre">Action</TableCell>
+                    <TableCell align="center">Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -253,11 +404,19 @@ export default function UserManagement() {
                       <TableCell align="right">{row.mobile}</TableCell>
                       <TableCell align="right">{row.status}</TableCell>
                       <TableCell allign="right">
-                        <Button>
-                          <i className="fa fa-edit"></i>
+                        <Button
+                          variant="contained"
+                          className={classes3.button}
+                          onClick={() => getParticularUser(row.uid)}
+                        >
+                          Edit
                         </Button>
-                        <Button>
-                          <i className="fa fa-trash"></i>
+                        <Button
+                          variant="contained"
+                          className={classes3.button}
+                          onClick={() => deleteData(row.uid)}
+                        >
+                          Delete
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -268,6 +427,14 @@ export default function UserManagement() {
           </KTCodeExample>
         </div>
       </div>
+      <PopUpToast
+        successSnackBarOpen={successSnackBarOpen}
+        setSuccessSnackBarOpen={setSuccessSnackBarOpen}
+        vertical="top"
+        horizontal="right"
+        severity={message.type}
+        message={message.message}
+      />
     </>
   );
 }

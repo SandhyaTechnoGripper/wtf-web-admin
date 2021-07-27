@@ -137,7 +137,6 @@ export default function EquipmentManagement() {
   };
 
   const handleChange = (name) => (event) => {
-    console.log(event);
     setValues({ ...values, [name]: event.target.value });
   };
 
@@ -159,16 +158,16 @@ export default function EquipmentManagement() {
     e.preventDefault();
 
     if (values.gym_id === "") {
-      return setError({ gym_id: "*GYM Id is mandatary" });
+      return setError({ gym_id: "*GYM Name is mandatary" });
     }
     if (values.equipment === "") {
-      return setError({ gym_id: "*Equipment is mandatary" });
+      return setError({ equipment: "*Equipment is mandatary" });
     }
     if (values.quantity === "") {
-      return setError({ gym_id: "*Quantity is mandatary" });
+      return setError({ quantity: "*Quantity is mandatary" });
     }
     if (values.brand === "") {
-      return setError({ gym_id: "*Brand is mandatary" });
+      return setError({ brand: "*Brand is mandatary" });
     }
     // POST request using fetch inside useEffect React hook
     const requestOptions = {
@@ -221,7 +220,22 @@ export default function EquipmentManagement() {
     });
   };
 
-  const updateData = () => {
+  const updateData = (e) => {
+    e.preventDefault();
+
+    if (values.gym_id === "") {
+      return setError({ gym_id: "*GYM Name is mandatary" });
+    }
+    if (values.equipment === "") {
+      return setError({ equipment: "*Equipment is mandatary" });
+    }
+    if (values.quantity === "") {
+      return setError({ quantity: "*Quantity is mandatary" });
+    }
+    if (values.brand === "") {
+      return setError({ brand: "*Brand is mandatary" });
+    }
+
     const requestOptions = {
       method: "PUT",
       headers: {
@@ -248,6 +262,7 @@ export default function EquipmentManagement() {
           });
         } else {
           // error
+          setSuccessSnackBarOpen(true);
           setMessage({
             type: "error",
             message: "Equipment Updation failed",
@@ -304,43 +319,29 @@ export default function EquipmentManagement() {
             </span>
             <div className="separator separator-dashed my-7"></div>
             <form className={classes2.container} noValidate autoComplete="off">
-              {editModalOpen.open ? (
-                <TextField
-                  id="outlined-select-currency"
-                  select
-                  name="gym_id"
-                  label="Gym Name"
-                  className={classes2.textField}
-                  value={values.gym_id}
-                  onChange={handleChange("gym_id")}
-                  SelectProps={{
-                    MenuProps: {
-                      className: classes2.menu,
-                    },
-                  }}
-                  margin="normal"
-                  variant="outlined"
-                >
-                  {getGymData?.length > 0 &&
-                    getGymData.map((option) => (
-                      <MenuItem key={option.uid} value={option.gym_name}>
-                        {option.gym_name}
-                      </MenuItem>
-                    ))}
-                </TextField>
-              ) : (
-                <TextField
-                  // error
-                  id="outlined-error"
-                  name="gym_id"
-                  label="Equipment Id"
-                  className={classes2.textField}
-                  margin="normal"
-                  variant="outlined"
-                  value={values.gym_id}
-                  onChange={handleChange("gym_id")}
-                />
-              )}
+              <TextField
+                id="outlined-select-currency"
+                select
+                name="gym_id"
+                label="Gym Name"
+                className={classes2.textField}
+                value={values.gym_id}
+                onChange={handleChange("gym_id")}
+                SelectProps={{
+                  MenuProps: {
+                    className: classes2.menu,
+                  },
+                }}
+                margin="normal"
+                variant="outlined"
+              >
+                {getGymData?.length > 0 &&
+                  getGymData.map((option) => (
+                    <MenuItem key={option.uid} value={option.gym_name}>
+                      {option.gym_name}
+                    </MenuItem>
+                  ))}
+              </TextField>
 
               <TextField
                 // error

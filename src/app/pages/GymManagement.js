@@ -1,7 +1,6 @@
 /* eslint-disable no-restricted-imports */
 import React, { useEffect, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
-import axios from "axios";
 import clsx from "clsx";
 import { TextField, InputBase } from "@material-ui/core";
 import { green } from "@material-ui/core/colors";
@@ -13,7 +12,6 @@ import {
 } from "@material-ui/core/styles";
 
 import { Notice, KTCodeExample } from "../../_metronic/_partials/controls";
-import MenuItem from "@material-ui/core/MenuItem";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -73,22 +71,44 @@ export default function GymManagement() {
   // add gym
   const classes2 = useStyles2();
   const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
+  const [message, setMessage] = useState({
+    type: "suceess",
+    message: "",
+  });
+  const [editModalOpen, setEditModalOpen] = useState({
+    open: false,
+    id: null,
+  });
   const [selectedFile, setSelectedFile] = useState({
     lease_agreement: null,
     electricity_bill: null,
     bank_statement: null,
   });
-  const [isSelected, setIsSelected] = useState(false);
   const [getData, setGetData] = useState([]);
   const [values, setValues] = useState({
+    user_id: "",
     name: "",
+    gym_name: "",
     address1: "",
     address2: "",
     city: "",
     state: "",
     pin: "",
     country: "",
-    latitudet: "",
+    latitude: "",
+    longitude: "",
+  });
+  const [error, setError] = useState({
+    user_id: "",
+    name: "",
+    gym_name: "",
+    address1: "",
+    address2: "",
+    city: "",
+    state: "",
+    pin: "",
+    country: "",
+    latitude: "",
     longitude: "",
   });
   const { authToken } = useSelector(
@@ -97,35 +117,79 @@ export default function GymManagement() {
     }),
     shallowEqual
   );
-  // console.log("filesdata",files)
+
+  useEffect(() => {
+    if (authToken) {
+      fetchGetData();
+    }
+  }, []);
+
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
-    // console.log("data of gym",values)
   };
   const changeHandler = (name) => (event) => {
     setSelectedFile({
       ...selectedFile,
       [name]: event.target.files[0],
     });
-    setIsSelected(true);
   };
 
-  const handleInput = () => {
+  const gymAdd = () => {
     const data = new FormData();
     data.append("name", values.name);
-    data.append("gym_name", values.name);
+    data.append("gym_name", values.gym_name);
     data.append("address1", values.address1);
     data.append("address2", values.address2);
     data.append("city", values.city);
     data.append("state", values.state);
     data.append("pin", values.pin);
     data.append("country", values.country);
-    data.append("lat", "1221212");
-    data.append("long", "11212");
+    data.append("lat", values.latitude);
+    data.append("long", values.longitude);
     data.append("lease_agreement", selectedFile.lease_agreement);
     data.append("electricity_bill", selectedFile.electricity_bill);
     data.append("bank_statement", selectedFile.bank_statement);
-    data.append("user_id", "zeWBVGFpEKTBh");
+    data.append("user_id", values.user_id);
+
+    if (values.name === "") {
+      return setError({ mode: "*Name is mandatary" });
+    }
+    if (values.gym_name === "") {
+      return setError({ name: "*GYM Name is mandatary" });
+    }
+    if (values.address1 === "") {
+      return setError({ date: "*Address 1 is mandatary" });
+    }
+    if (values.address2 === "") {
+      return setError({ is_public: "*Address 2 is mandatary" });
+    }
+    if (values.city === "") {
+      return setError({ description: "*City is mandatary" });
+    }
+    if (values.state === "") {
+      return setError({ price: "*State is mandatary" });
+    }
+    if (values.pin === "") {
+      return setError({ price: "*Pin is mandatary" });
+    }
+    if (values.country === "") {
+      return setError({ price: "*Country is mandatary" });
+    }
+    if (values.latitude === "") {
+      return setError({ price: "*Latitude is mandatary" });
+    }
+    if (values.longitude === "") {
+      return setError({ price: "*Longitude is mandatary" });
+    }
+    if (!selectedFile.lease_agreement) {
+      return setError({ price: "*Lease Agreement is mandatary" });
+    }
+    if (!selectedFile.electricity_bill) {
+      return setError({ price: "*Electricity is mandatary" });
+    }
+    if (!selectedFile.bank_statement) {
+      return setError({ price: "*Bank Statement is mandatary" });
+    }
 
     fetch("http://13.232.102.139:9000/gym/add", {
       method: "POST",
@@ -135,12 +199,25 @@ export default function GymManagement() {
       },
       body: data,
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          fetchGetData();
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "success",
+            message: "GYM Added Successfully",
+          });
+        } else {
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "error",
+            message: "GYM Added failed",
+          });
+        }
+        return response.json();
+      })
       .then((values) => {
         console.log("Success PostData:", values);
-      })
-      .catch((error) => {
-        console.log(error);
       });
   };
   const fetchGetData = () => {
@@ -158,9 +235,170 @@ export default function GymManagement() {
       });
   };
 
-  useEffect(() => {
-    fetchGetData();
-  }, []);
+  const getParticularGym = (id) => {
+    if (editModalOpen.open) {
+      setValues({
+        name: "",
+        gym_name: "",
+        address1: "",
+        address2: "",
+        city: "",
+        state: "",
+        pin: "",
+        country: "",
+        latitude: "",
+        longitude: "",
+      });
+      return setEditModalOpen({ open: false, id: null });
+    }
+
+    setEditModalOpen({ open: true, id: id });
+    let gym = getData.filter((data) => data.uid === id);
+    setValues({
+      name: gym[0].name,
+      user_id: gym[0].user_id,
+      gym_name: gym[0].gym_name,
+      address1: gym[0].address1,
+      address2: gym[0].address2,
+      state: gym[0].state,
+      pin: gym[0].pin,
+      country: gym[0].country,
+      latitude: gym[0].latitude,
+      longitude: gym[0].longitude,
+    });
+  };
+
+  const updateData = (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+    data.append("name", values.name);
+    data.append("gym_name", values.gym_name);
+    data.append("address1", values.address1);
+    data.append("address2", values.address2);
+    data.append("city", values.city);
+    data.append("state", values.state);
+    data.append("pin", values.pin);
+    data.append("country", values.country);
+    data.append("lat", values.latitude);
+    data.append("long", values.longitude);
+    data.append("lease_agreement", selectedFile.lease_agreement);
+    data.append("electricity_bill", selectedFile.electricity_bill);
+    data.append("bank_statement", selectedFile.bank_statement);
+    data.append("user_id", values.user_id);
+
+    if (values.name === "") {
+      return setError({ mode: "*Name is mandatary" });
+    }
+    if (values.gym_name === "") {
+      return setError({ name: "*GYM Name is mandatary" });
+    }
+    if (values.address1 === "") {
+      return setError({ date: "*Address 1 is mandatary" });
+    }
+    if (values.address2 === "") {
+      return setError({ is_public: "*Address 2 is mandatary" });
+    }
+    if (values.city === "") {
+      return setError({ description: "*City is mandatary" });
+    }
+    if (values.state === "") {
+      return setError({ price: "*State is mandatary" });
+    }
+    if (values.pin === "") {
+      return setError({ price: "*Pin is mandatary" });
+    }
+    if (values.country === "") {
+      return setError({ price: "*Country is mandatary" });
+    }
+    if (values.latitude === "") {
+      return setError({ price: "*Latitude is mandatary" });
+    }
+    if (values.longitude === "") {
+      return setError({ price: "*Longitude is mandatary" });
+    }
+    if (!selectedFile.lease_agreement) {
+      return setError({ price: "*Lease Agreement is mandatary" });
+    }
+    if (!selectedFile.electricity_bill) {
+      return setError({ price: "*Electricity is mandatary" });
+    }
+    if (!selectedFile.bank_statement) {
+      return setError({ price: "*Bank Statement is mandatary" });
+    }
+
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        // "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: data,
+    };
+    fetch("http://13.232.102.139:9000/gym/update", requestOptions).then(
+      (response) => {
+        if (response.ok) {
+          // success
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "success",
+            message: "GYM Updated Successfully",
+          });
+          fetchGetData();
+          setValues({
+            name: "",
+            gym_name: "",
+            address1: "",
+            address2: "",
+            city: "",
+            state: "",
+            pin: "",
+            country: "",
+            latitude: "",
+            longitude: "",
+          });
+        } else {
+          // error
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "error",
+            message: "GYM Updation failed",
+          });
+        }
+      }
+    );
+  };
+
+  const deleteData = (id) => {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ uid: id }),
+    };
+    fetch("http://13.232.102.139:9000/gym/delete", requestOptions).then(
+      (response) => {
+        if (response.ok) {
+          // success
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "success",
+            message: "GYM Deleted Successfully",
+          });
+          let data = getData.filter((data) => data.uid !== id);
+          setGetData(data);
+        } else {
+          // error
+          setMessage({
+            type: "error",
+            message: "GYM deletion failed",
+          });
+        }
+      }
+    );
+  };
 
   return (
     <>
@@ -168,7 +406,9 @@ export default function GymManagement() {
         <div className="col-md-3">
           <KTCodeExample
             // jsCode={jsCode2}
-            beforeCodeTitle="Add Gym"
+            beforeCodeTitle={`${
+              !editModalOpen.open ? "Add Gym" : "Update Gym"
+            }`}
             codeBlockHeight="400px"
           >
             <div className="separator separator-dashed my-7"></div>
@@ -179,6 +419,15 @@ export default function GymManagement() {
                 className={classes2.textField}
                 value={values.name}
                 onChange={handleChange("name")}
+                margin="normal"
+                variant="outlined"
+              />
+              <TextField
+                id="outlined-name"
+                label="GYM Name"
+                className={classes2.textField}
+                value={values.gym_name}
+                onChange={handleChange("gym_name")}
                 margin="normal"
                 variant="outlined"
               />
@@ -244,6 +493,26 @@ export default function GymManagement() {
               />
               <TextField
                 id="outlined"
+                label="Latitude"
+                type="text"
+                className={classes2.textField}
+                value={values.latitude}
+                onChange={handleChange("latitude")}
+                margin="normal"
+                variant="outlined"
+              />
+              <TextField
+                id="outlined"
+                label="Longitude"
+                type="text"
+                className={classes2.textField}
+                value={values.longitude}
+                onChange={handleChange("longitude")}
+                margin="normal"
+                variant="outlined"
+              />
+              <TextField
+                id="outlined"
                 label="Lease Agreement"
                 type="file"
                 className={classes2.textField}
@@ -296,7 +565,7 @@ export default function GymManagement() {
               type="submit"
               variant="contained"
               className={classes3.button}
-              onClick={handleInput}
+              onClick={editModalOpen.open ? updateData : gymAdd}
             >
               Submit
             </Button>
@@ -343,11 +612,18 @@ export default function GymManagement() {
                       </TableCell>
                       <TableCell align="right">{row.bank_statement}</TableCell>
                       <Button
-                        type="submit"
                         variant="contained"
                         className={classes3.button}
+                        onClick={() => getParticularGym(row.uid)}
                       >
                         Edit
+                      </Button>
+                      <Button
+                        variant="contained"
+                        className={classes3.button}
+                        onClick={() => deleteData(row.uid)}
+                      >
+                        Delete
                       </Button>
                     </TableRow>
                   ))}

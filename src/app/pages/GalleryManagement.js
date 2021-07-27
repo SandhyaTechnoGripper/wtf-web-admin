@@ -169,10 +169,10 @@ export default function GalleryManagement() {
       return setError({ gym_id: "*GYM Id is mandatary" });
     }
     if (values.name === "") {
-      return setError({ gym_id: "*Name is mandatary" });
+      return setError({ name: "*Name is mandatary" });
     }
     if (values.breif === "") {
-      return setError({ gym_id: "*Breif is mandatary" });
+      return setError({ breif: "*Breif is mandatary" });
     }
 
     // POST request using fetch inside useEffect React hook
@@ -325,43 +325,29 @@ export default function GalleryManagement() {
             </span>
             <div className="separator separator-dashed my-7"></div>
             <form className={classes2.container} noValidate autoComplete="off">
-              {editModalOpen.open ? (
-                <TextField
-                  id="outlined-select-currency"
-                  select
-                  name="gym_id"
-                  label="Gym Name"
-                  className={classes2.textField}
-                  value={values.gym_id}
-                  onChange={handleChange("gym_id")}
-                  SelectProps={{
-                    MenuProps: {
-                      className: classes2.menu,
-                    },
-                  }}
-                  margin="normal"
-                  variant="outlined"
-                >
-                  {getGymData?.length > 0 &&
-                    getGymData.map((option) => (
-                      <MenuItem key={option.uid} value={option.gym_name}>
-                        {option.gym_name}
-                      </MenuItem>
-                    ))}
-                </TextField>
-              ) : (
-                <TextField
-                  // error
-                  id="outlined-error"
-                  name="gym_id"
-                  label="GYM Id"
-                  className={classes2.textField}
-                  margin="normal"
-                  variant="outlined"
-                  value={values.gym_id}
-                  onChange={handleChange("gym_id")}
-                />
-              )}
+              <TextField
+                id="outlined-select-currency"
+                select
+                name="gym_id"
+                label="Gym Name"
+                className={classes2.textField}
+                value={values.gym_id}
+                onChange={handleChange("gym_id")}
+                SelectProps={{
+                  MenuProps: {
+                    className: classes2.menu,
+                  },
+                }}
+                margin="normal"
+                variant="outlined"
+              >
+                {getGymData?.length > 0 &&
+                  getGymData.map((option) => (
+                    <MenuItem key={option.uid} value={option.gym_name}>
+                      {option.gym_name}
+                    </MenuItem>
+                  ))}
+              </TextField>
 
               <TextField
                 // error

@@ -138,8 +138,7 @@ export default function OfferManagement() {
     })
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson.data);
-        setGetData(responseJson.data);
+        setGetData(responseJson?.data);
       });
   };
 
@@ -157,15 +156,15 @@ export default function OfferManagement() {
     })
       .then((response) => response.json())
       .then((responseJson) => {
-        setGymData(responseJson.data);
+        setGymData(responseJson?.data);
       });
   };
 
-  const equipAdd = (e) => {
+  const offerAdd = (e) => {
     e.preventDefault();
 
     if (values.gym_id === "") {
-      return setError({ gym_id: "*GYM Id is mandatary" });
+      return setError({ gym_id: "*GYM Name is mandatary" });
     }
     if (values.name === "") {
       return setError({ name: "*Name is mandatary" });
@@ -185,7 +184,6 @@ export default function OfferManagement() {
     if (values.value === "") {
       return setError({ value: "*Value is mandatary" });
     }
-    console.log(values)
     // POST request using fetch inside useEffect React hook
     const requestOptions = {
       method: "POST",
@@ -217,7 +215,7 @@ export default function OfferManagement() {
       .then((data) => {});
   };
 
-  const getParticularEquipment = (id) => {
+  const getParticularOffer = (id) => {
     if (editModalOpen.open) {
       setValues({
         gym_id: "",
@@ -349,43 +347,29 @@ export default function OfferManagement() {
             </span>
             <div className="separator separator-dashed my-7"></div>
             <form className={classes2.container} noValidate autoComplete="off">
-              {editModalOpen.open ? (
-                <TextField
-                  id="outlined-select-currency"
-                  select
-                  name="gym_id"
-                  label="Gym Name"
-                  className={classes2.textField}
-                  value={values.gym_id}
-                  onChange={handleChange("gym_id")}
-                  SelectProps={{
-                    MenuProps: {
-                      className: classes2.menu,
-                    },
-                  }}
-                  margin="normal"
-                  variant="outlined"
-                >
-                  {getGymData?.length > 0 &&
-                    getGymData.map((option) => (
-                      <MenuItem key={option.uid} value={option.gym_name}>
-                        {option.gym_name}
-                      </MenuItem>
-                    ))}
-                </TextField>
-              ) : (
-                <TextField
-                  // error
-                  id="outlined-error"
-                  name="gym_id"
-                  label="Equipment Id"
-                  className={classes2.textField}
-                  margin="normal"
-                  variant="outlined"
-                  value={values.gym_id}
-                  onChange={handleChange("gym_id")}
-                />
-              )}
+              <TextField
+                id="outlined-select-currency"
+                select
+                name="gym_id"
+                label="Gym Name"
+                className={classes2.textField}
+                value={values.gym_id}
+                onChange={handleChange("gym_id")}
+                SelectProps={{
+                  MenuProps: {
+                    className: classes2.menu,
+                  },
+                }}
+                margin="normal"
+                variant="outlined"
+              >
+                {getGymData?.length > 0 &&
+                  getGymData.map((option) => (
+                    <MenuItem key={option.uid} value={option.gym_name}>
+                      {option.gym_name}
+                    </MenuItem>
+                  ))}
+              </TextField>
 
               <TextField
                 // error
@@ -457,7 +441,7 @@ export default function OfferManagement() {
               <Button
                 variant="contained"
                 className={classes3.button}
-                onClick={editModalOpen.open ? updateData : equipAdd}
+                onClick={editModalOpen.open ? updateData : offerAdd}
               >
                 Submit
               </Button>
@@ -495,7 +479,7 @@ export default function OfferManagement() {
                         <Button
                           variant="contained"
                           className={classes3.button}
-                          onClick={() => getParticularEquipment(row.uid)}
+                          onClick={() => getParticularOffer(row.uid)}
                         >
                           Edit
                         </Button>
