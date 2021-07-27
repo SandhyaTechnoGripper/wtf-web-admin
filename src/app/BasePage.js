@@ -5,10 +5,16 @@ import { BuilderPage } from "./pages/BuilderPage";
 import { MyPage } from "./pages/MyPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import EditUser from "./pages/editUser";
-import TrainerManagement from "./pages/TrainerManagement"
+import TrainerManagement from "./pages/TrainerManagement";
 import UserManagement from "./pages/UserManagement";
 import GymManagement from "./pages/GymManagement";
 import EquipmentManagement from "./pages/EquipmentManagement";
+import BenefitManagement from "./pages/BenefitManagement";
+import AddonsManagement from "./pages/AddonsManagement";
+import EventsManagement from "./pages/EventsManagement";
+import GalleryManagement from "./pages/GalleryManagement";
+import OfferManagement from "./pages/OfferManagement";
+import FeedbackManagement from "./pages/FeedbackManagement";
 
 const GoogleMaterialPage = lazy(() =>
   import("./modules/GoogleMaterialExamples/GoogleMaterialPage")
@@ -43,6 +49,12 @@ export default function BasePage() {
         <ContentRoute path="/trainer" component={TrainerManagement} />
         <ContentRoute path="/gym" component={GymManagement} />
         <ContentRoute path="/equip" component={EquipmentManagement} />
+        <ContentRoute path="/benefit" component={BenefitManagement} />
+        <ContentRoute path="/addons" component={AddonsManagement} />
+        <ContentRoute path="/gallery" component={GalleryManagement} />
+        <ContentRoute path="/offers" component={OfferManagement} />
+        <ContentRoute path="/events" component={EventsManagement} />
+        <ContentRoute path="/feedback" component={FeedbackManagement} />
 
         <ContentRoute path="/builder" component={BuilderPage} />
         <ContentRoute path="/my-page" component={MyPage} />

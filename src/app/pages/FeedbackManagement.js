@@ -79,7 +79,7 @@ const useStyles2 = makeStyles((theme) => ({
   },
 }));
 
-export default function EquipmentManagement() {
+export default function FeedbackManagement() {
   const { authToken } = useSelector(
     ({ auth }) => ({
       authToken: auth.authToken,
@@ -98,7 +98,10 @@ export default function EquipmentManagement() {
     type: "suceess",
     message: "",
   });
-  const [editModalOpen, setEditModalOpen] = useState({ open: false, id: null });
+  const [editModalOpen, setEditModalOpen] = useState({
+    open: false,
+    id: null,
+  });
   const [getData, setGetData] = useState([]);
   const [getGymData, setGymData] = useState([]);
 
@@ -137,7 +140,7 @@ export default function EquipmentManagement() {
   };
 
   const handleChange = (name) => (event) => {
-    console.log(event)
+    console.log(event);
     setValues({ ...values, [name]: event.target.value });
   };
 
@@ -219,7 +222,10 @@ export default function EquipmentManagement() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
-      body: JSON.stringify({ equipment_id: editModalOpen.id, ...values }),
+      body: JSON.stringify({
+        equipment_id: editModalOpen.id,
+        ...values,
+      }),
     };
     fetch("http://13.232.102.139:9000/equipment/update", requestOptions).then(
       (response) => {

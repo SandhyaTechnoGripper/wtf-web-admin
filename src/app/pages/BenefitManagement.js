@@ -79,7 +79,7 @@ const useStyles2 = makeStyles((theme) => ({
   },
 }));
 
-export default function EquipmentManagement() {
+export default function BenefitManagement() {
   const { authToken } = useSelector(
     ({ auth }) => ({
       authToken: auth.authToken,
@@ -94,25 +94,27 @@ export default function EquipmentManagement() {
   const classes2 = useStyles2();
 
   const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(false);
   const [message, setMessage] = useState({
     type: "suceess",
     message: "",
   });
-  const [editModalOpen, setEditModalOpen] = useState({ open: false, id: null });
+  const [editModalOpen, setEditModalOpen] = useState({
+    open: false,
+    id: null,
+  });
   const [getData, setGetData] = useState([]);
   const [getGymData, setGymData] = useState([]);
 
   const [error, setError] = useState({
     gym_id: "",
-    equipment: "",
-    quantity: "",
-    brand: "",
+    name: "",
+    breif: "",
   });
   const [values, setValues] = useState({
     gym_id: "",
-    equipment: "",
-    quantity: "",
-    brand: "",
+    name: "",
+    breif: "",
   });
 
   useEffect(() => {
@@ -123,7 +125,7 @@ export default function EquipmentManagement() {
   }, []);
 
   const fetchGetData = () => {
-    fetch("http://13.232.102.139:9000/equipment/", {
+    fetch("http://13.232.102.139:9000/benefits/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -137,7 +139,6 @@ export default function EquipmentManagement() {
   };
 
   const handleChange = (name) => (event) => {
-    console.log(event)
     setValues({ ...values, [name]: event.target.value });
   };
 
@@ -155,93 +156,113 @@ export default function EquipmentManagement() {
       });
   };
 
-  const equipAdd = (e) => {
+  const benefitAdd = (e) => {
     e.preventDefault();
+
+    const data = new FormData();
+    data.append("name", values.name);
+    data.append("gym_id", values.gym_id);
+    data.append("breif", values.breif);
+    data.append("image", selectedFile);
 
     if (values.gym_id === "") {
       return setError({ gym_id: "*GYM Id is mandatary" });
     }
-    if (values.equipment === "") {
-      return setError({ gym_id: "*Equipment is mandatary" });
+    if (values.name === "") {
+      return setError({ gym_id: "*Name is mandatary" });
     }
-    if (values.quantity === "") {
-      return setError({ gym_id: "*Quantity is mandatary" });
+    if (values.breif === "") {
+      return setError({ gym_id: "*Breif is mandatary" });
     }
-    if (values.brand === "") {
-      return setError({ gym_id: "*Brand is mandatary" });
-    }
+
     // POST request using fetch inside useEffect React hook
     const requestOptions = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        // "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
-      body: JSON.stringify(values),
+      body: data,
     };
-    fetch("http://13.232.102.139:9000/equipment/add/", requestOptions)
+    fetch("http://13.232.102.139:9000/benefits/add/", requestOptions)
       .then((response) => response.json())
       .then((data) => {
-        setSuccessSnackBarOpen(true);
-        setMessage({
-          type: "success",
-          message: "Equipment Added Successfully",
-        });
-        fetchGetData();
+        console.log(data);
+        // setSuccessSnackBarOpen(true);
+        // setMessage({
+        //   type: "success",
+        //   message: "Benefit Added Successfully",
+        // });
+        // fetchGetData();
       });
   };
 
-  const getParticularEquipment = (id) => {
+  const getParticularBenefit = (id) => {
     if (editModalOpen.open) {
       setValues({
         gym_id: "",
-        equipment: "",
-        quantity: "",
-        brand: "",
+        name: "",
+        breif: "",
       });
       return setEditModalOpen({ open: false, id: null });
     }
 
     setEditModalOpen({ open: true, id: id });
-    let equipment = getData.filter((data) => data.uid === id);
+    let benefit = getData.filter((data) => data.uid === id);
     setValues({
-      gym_id: equipment[0].gym_id,
-      equipment: equipment[0].equipment,
-      quantity: equipment[0].quantity,
-      brand: equipment[0].brand,
+      gym_id: benefit[0].gym_id,
+      name: benefit[0].name,
+      breif: benefit[0].breif,
     });
   };
 
-  const updateData = () => {
+  const updateData = (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+    data.append("name", values.name);
+    data.append("gym_id", values.gym_id);
+    data.append("breif", values.breif);
+    data.append("image", selectedFile);
+
+    if (values.gym_id === "") {
+      return setError({ gym_id: "*GYM Id is mandatary" });
+    }
+    if (values.name === "") {
+      return setError({ gym_id: "*Name is mandatary" });
+    }
+    if (values.breif === "") {
+      return setError({ gym_id: "*Breif is mandatary" });
+    }
+
     const requestOptions = {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
-      body: JSON.stringify({ equipment_id: editModalOpen.id, ...values }),
+      body: data,
     };
-    fetch("http://13.232.102.139:9000/equipment/update", requestOptions).then(
+    fetch("http://13.232.102.139:9000/benefits/update", requestOptions).then(
       (response) => {
         if (response.ok) {
           // success
           setSuccessSnackBarOpen(true);
           setMessage({
             type: "success",
-            message: "Equipment Updated Successfully",
+            message: "Benefit Updated Successfully",
           });
           fetchGetData();
           setValues({
             gym_id: "",
-            equipment: "",
-            quantity: "",
-            brand: "",
+            name: "",
+            breif: "",
           });
         } else {
           // error
           setMessage({
             type: "error",
-            message: "Equipment Updation failed",
+            message: "Benefit Updation failed",
           });
         }
       }
@@ -257,7 +278,7 @@ export default function EquipmentManagement() {
       },
       body: JSON.stringify({ uid: id }),
     };
-    fetch("http://13.232.102.139:9000/equipment/delete", requestOptions).then(
+    fetch("http://13.232.102.139:9000/benefits/delete", requestOptions).then(
       (response) => {
         if (response.ok) {
           // success
@@ -265,7 +286,7 @@ export default function EquipmentManagement() {
           setSuccessSnackBarOpen(true);
           setMessage({
             type: "success",
-            message: "Equipment Deleted Successfully",
+            message: "Benefits Deleted Successfully",
           });
           let data = getData.filter((data) => data.uid !== id);
           setGetData(data);
@@ -273,7 +294,7 @@ export default function EquipmentManagement() {
           // error
           setMessage({
             type: "success",
-            message: "Equipment deletion failed",
+            message: "Benefits deletion failed",
           });
         }
       }
@@ -286,7 +307,7 @@ export default function EquipmentManagement() {
           <KTCodeExample
             jsCode={jsCode1}
             beforeCodeTitle={`${
-              !editModalOpen.open ? "Add Equipment" : "Update Equipment"
+              !editModalOpen.open ? "Add Benefit" : "Update Benefit"
             }`}
             codeBlockHeight="400px"
           >
@@ -324,7 +345,7 @@ export default function EquipmentManagement() {
                   // error
                   id="outlined-error"
                   name="gym_id"
-                  label="Equipment Id"
+                  label="GYM Id"
                   className={classes2.textField}
                   margin="normal"
                   variant="outlined"
@@ -336,41 +357,42 @@ export default function EquipmentManagement() {
               <TextField
                 // error
                 id="outlined-error"
-                name="equipment"
-                label="Equipment"
+                name="name"
+                label="Name"
                 className={classes2.textField}
                 margin="normal"
                 variant="outlined"
-                value={values.equipment}
-                onChange={handleChange("equipment")}
+                value={values.name}
+                onChange={handleChange("name")}
               />
               <TextField
                 // error
                 id="outlined-error"
-                name="quantity"
-                label="Quantity"
+                name="breif"
+                label="Breif"
                 className={classes2.textField}
                 margin="normal"
                 variant="outlined"
-                value={values.quantity}
-                onChange={handleChange("quantity")}
+                value={values.breif}
+                onChange={handleChange("breif")}
               />
 
               <TextField
-                // error
-                id="outlined-error"
-                name="brand"
-                label="Brand"
+                id="outlined"
+                label="Image"
+                type="file"
                 className={classes2.textField}
+                //  name='electricity_bill'
+                // value={selectedFile.electricity_bill}
+                onChange={(e) => setSelectedFile(e.target.files[0])}
                 margin="normal"
                 variant="outlined"
-                value={values.brand}
-                onChange={handleChange("brand")}
               />
+
               <Button
                 variant="contained"
                 className={classes3.button}
-                onClick={editModalOpen.open ? updateData : equipAdd}
+                onClick={editModalOpen.open ? updateData : benefitAdd}
               >
                 Submit
               </Button>
@@ -381,7 +403,7 @@ export default function EquipmentManagement() {
         <div className="col-md-8">
           <KTCodeExample
             jsCode={jsCode1}
-            beforeCodeTitle="View Equipment"
+            beforeCodeTitle="View Benefits"
             codeBlockHeight="400px"
           >
             <Paper className={classes4.root}>
@@ -389,9 +411,9 @@ export default function EquipmentManagement() {
                 <TableHead>
                   <TableRow>
                     <TableCell>GYM Name</TableCell>
-                    <TableCell align="right">Equipment</TableCell>
-                    <TableCell align="right">Quantity</TableCell>
-                    <TableCell align="right">Brand</TableCell>
+                    <TableCell align="right">Name</TableCell>
+                    <TableCell align="right">breif</TableCell>
+                    <TableCell align="right">Image</TableCell>
                     <TableCell align="right">Action</TableCell>
                   </TableRow>
                 </TableHead>
@@ -401,14 +423,14 @@ export default function EquipmentManagement() {
                       <TableCell component="th" scope="row">
                         {row.gym_id}
                       </TableCell>
-                      <TableCell align="right">{row.equipment}</TableCell>
-                      <TableCell align="right">{row.quantity}</TableCell>
-                      <TableCell align="right">{row.brand}</TableCell>
+                      <TableCell align="right">{row.name}</TableCell>
+                      <TableCell align="right">{row.breif}</TableCell>
+                      <TableCell align="right">{row.image}</TableCell>
                       <TableCell align="right">
                         <Button
                           variant="contained"
                           className={classes3.button}
-                          onClick={() => getParticularEquipment(row.uid)}
+                          onClick={() => getParticularBenefit(row.uid)}
                         >
                           Edit
                         </Button>

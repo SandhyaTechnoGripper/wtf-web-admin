@@ -79,7 +79,7 @@ const useStyles2 = makeStyles((theme) => ({
   },
 }));
 
-export default function EquipmentManagement() {
+export default function OfferManagement() {
   const { authToken } = useSelector(
     ({ auth }) => ({
       authToken: auth.authToken,
