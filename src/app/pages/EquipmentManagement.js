@@ -94,7 +94,10 @@ export default function EquipmentManagement() {
   const classes2 = useStyles2();
 
   const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({
+    type: "suceess",
+    message: "",
+  });
   const [editModalOpen, setEditModalOpen] = useState({ open: false, id: null });
   const [getData, setGetData] = useState([]);
 
@@ -144,7 +147,10 @@ export default function EquipmentManagement() {
       .then((response) => response.json())
       .then((data) => {
         setSuccessSnackBarOpen(true);
-        setMessage("Equipment Added Successfully");
+        setMessage({
+          type: "success",
+          message: "Equipment Added Successfully",
+        });
         fetchGetData();
       });
   };
@@ -184,7 +190,10 @@ export default function EquipmentManagement() {
         if (response.ok) {
           // success
           setSuccessSnackBarOpen(true);
-          setMessage("Equipment Updated Successfully");
+          setMessage({
+            type: "success",
+            message: "Equipment Updated Successfully",
+          });
           fetchGetData();
           setValues({
             gym_id: "",
@@ -214,7 +223,10 @@ export default function EquipmentManagement() {
           // success
 
           setSuccessSnackBarOpen(true);
-          setMessage("Equipment Deleted Successfully");
+          setMessage({
+            type: "success",
+            message: "Equipment Deleted Successfully",
+          });
           let data = getData.filter((data) => data.uid !== id);
           setGetData(data);
         } else {
@@ -463,8 +475,8 @@ export default function EquipmentManagement() {
         setSuccessSnackBarOpen={setSuccessSnackBarOpen}
         vertical="top"
         horizontal="right"
-        severity="success"
-        message={message}
+        severity={message.type}
+        message={message.message}
       />
     </>
   );
