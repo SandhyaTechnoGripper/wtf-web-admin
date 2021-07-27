@@ -94,6 +94,7 @@ export default function FeedbackManagement() {
   const classes2 = useStyles2();
 
   const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(false);
   const [message, setMessage] = useState({
     type: "suceess",
     message: "",
@@ -106,16 +107,16 @@ export default function FeedbackManagement() {
   const [getGymData, setGymData] = useState([]);
 
   const [error, setError] = useState({
+    user_id: "",
     gym_id: "",
-    equipment: "",
-    quantity: "",
-    brand: "",
+    related_to: "",
+    description: "",
   });
   const [values, setValues] = useState({
+    user_id: "123",
     gym_id: "",
-    equipment: "",
-    quantity: "",
-    brand: "",
+    related_to: "",
+    description: "",
   });
 
   useEffect(() => {
@@ -126,7 +127,7 @@ export default function FeedbackManagement() {
   }, []);
 
   const fetchGetData = () => {
-    fetch("http://13.232.102.139:9000/equipment/", {
+    fetch("http://13.232.102.139:9000/feedback/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -140,7 +141,6 @@ export default function FeedbackManagement() {
   };
 
   const handleChange = (name) => (event) => {
-    console.log(event);
     setValues({ ...values, [name]: event.target.value });
   };
 
@@ -158,96 +158,132 @@ export default function FeedbackManagement() {
       });
   };
 
-  const equipAdd = (e) => {
+  const benefitAdd = (e) => {
     e.preventDefault();
+
+    const data = new FormData();
+    data.append("user_id", values.user_id);
+    data.append("gym_id", values.gym_id);
+    data.append("related_to", values.related_to);
+    data.append("description", values.description);
+    data.append("attachment", selectedFile);
+
+    if (values.gym_id === "") {
+      return setError({ user_id: "*GYM Id is mandatary" });
+    }
 
     if (values.gym_id === "") {
       return setError({ gym_id: "*GYM Id is mandatary" });
     }
-    if (values.equipment === "") {
-      return setError({ gym_id: "*Equipment is mandatary" });
+    if (values.name === "") {
+      return setError({ related_to: "*Title is mandatary" });
     }
-    if (values.quantity === "") {
-      return setError({ gym_id: "*Quantity is mandatary" });
+    if (values.breif === "") {
+      return setError({ description: "*Description is mandatary" });
     }
-    if (values.brand === "") {
-      return setError({ gym_id: "*Brand is mandatary" });
-    }
+
     // POST request using fetch inside useEffect React hook
     const requestOptions = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        // "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
-      body: JSON.stringify(values),
+      body: data,
     };
-    fetch("http://13.232.102.139:9000/equipment/add/", requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        setSuccessSnackBarOpen(true);
-        setMessage({
-          type: "success",
-          message: "Equipment Added Successfully",
-        });
-        fetchGetData();
-      });
+    fetch("http://13.232.102.139:9000/feedback/add/", requestOptions)
+      .then((response) => {
+        if (response.ok) {
+          fetchGetData();
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "success",
+            message: "Feedback Added Successfully",
+          });
+        } else {
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "error",
+            message: "Feedback Added failed",
+          });
+        }
+        response.json();
+      })
+      .then((data) => {});
   };
 
-  const getParticularEquipment = (id) => {
+  const getParticularBenefit = (id) => {
     if (editModalOpen.open) {
       setValues({
+        user_id: "",
         gym_id: "",
-        equipment: "",
-        quantity: "",
-        brand: "",
+        related_to: "",
+        description: "",
       });
       return setEditModalOpen({ open: false, id: null });
     }
-
     setEditModalOpen({ open: true, id: id });
-    let equipment = getData.filter((data) => data.uid === id);
+    let benefit = getData.filter((data) => data.uid === id);
     setValues({
-      gym_id: equipment[0].gym_id,
-      equipment: equipment[0].equipment,
-      quantity: equipment[0].quantity,
-      brand: equipment[0].brand,
+      user_id: benefit[0].user_id,
+      gym_id: benefit[0].gym_id,
+      related_to: benefit[0].related_to,
+      description: benefit[0].description,
     });
   };
 
-  const updateData = () => {
+  const updateData = (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+    data.append("user_id", values.user_id);
+    data.append("gym_id", values.gym_id);
+    data.append("related_to", values.related_to);
+    data.append("description", values.description);
+    data.append("attachment", selectedFile);
+
+    if (values.gym_id === "") {
+      return setError({ user_id: "*GYM Id is mandatary" });
+    }
+
+    if (values.gym_id === "") {
+      return setError({ gym_id: "*GYM Id is mandatary" });
+    }
+    if (values.name === "") {
+      return setError({ related_to: "*Title is mandatary" });
+    }
+    if (values.breif === "") {
+      return setError({ description: "*Description is mandatary" });
+    }
+
     const requestOptions = {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
-      body: JSON.stringify({
-        equipment_id: editModalOpen.id,
-        ...values,
-      }),
+      body: data,
     };
-    fetch("http://13.232.102.139:9000/equipment/update", requestOptions).then(
+    fetch("http://13.232.102.139:9000/feedback/update", requestOptions).then(
       (response) => {
         if (response.ok) {
           // success
           setSuccessSnackBarOpen(true);
           setMessage({
             type: "success",
-            message: "Equipment Updated Successfully",
+            message: "Feedback Updated Successfully",
           });
           fetchGetData();
           setValues({
             gym_id: "",
-            equipment: "",
-            quantity: "",
-            brand: "",
+            name: "",
+            breif: "",
           });
         } else {
           // error
           setMessage({
             type: "error",
-            message: "Equipment Updation failed",
+            message: "Feedback Updation failed",
           });
         }
       }
@@ -263,7 +299,7 @@ export default function FeedbackManagement() {
       },
       body: JSON.stringify({ uid: id }),
     };
-    fetch("http://13.232.102.139:9000/equipment/delete", requestOptions).then(
+    fetch("http://13.232.102.139:9000/feedback/delete", requestOptions).then(
       (response) => {
         if (response.ok) {
           // success
@@ -271,15 +307,15 @@ export default function FeedbackManagement() {
           setSuccessSnackBarOpen(true);
           setMessage({
             type: "success",
-            message: "Equipment Deleted Successfully",
+            message: "Feedback Deleted Successfully",
           });
           let data = getData.filter((data) => data.uid !== id);
           setGetData(data);
         } else {
           // error
           setMessage({
-            type: "success",
-            message: "Equipment deletion failed",
+            type: "error",
+            message: "Feedback deletion failed",
           });
         }
       }
@@ -292,7 +328,7 @@ export default function FeedbackManagement() {
           <KTCodeExample
             jsCode={jsCode1}
             beforeCodeTitle={`${
-              !editModalOpen.open ? "Add Equipment" : "Update Equipment"
+              !editModalOpen.open ? "Add Feedback" : "Update Feedback"
             }`}
             codeBlockHeight="400px"
           >
@@ -330,7 +366,7 @@ export default function FeedbackManagement() {
                   // error
                   id="outlined-error"
                   name="gym_id"
-                  label="Equipment Id"
+                  label="GYM Id"
                   className={classes2.textField}
                   margin="normal"
                   variant="outlined"
@@ -342,41 +378,42 @@ export default function FeedbackManagement() {
               <TextField
                 // error
                 id="outlined-error"
-                name="equipment"
-                label="Equipment"
+                name="related_to"
+                label="Title"
                 className={classes2.textField}
                 margin="normal"
                 variant="outlined"
-                value={values.equipment}
-                onChange={handleChange("equipment")}
+                value={values.related_to}
+                onChange={handleChange("related_to")}
               />
               <TextField
                 // error
                 id="outlined-error"
-                name="quantity"
-                label="Quantity"
+                name="description"
+                label="Description"
                 className={classes2.textField}
                 margin="normal"
                 variant="outlined"
-                value={values.quantity}
-                onChange={handleChange("quantity")}
+                value={values.description}
+                onChange={handleChange("description")}
               />
 
               <TextField
-                // error
-                id="outlined-error"
-                name="brand"
-                label="Brand"
+                id="outlined"
+                label="Attachment"
+                type="file"
                 className={classes2.textField}
+                //  name='electricity_bill'
+                // value={selectedFile.electricity_bill}
+                onChange={(e) => setSelectedFile(e.target.files[0])}
                 margin="normal"
                 variant="outlined"
-                value={values.brand}
-                onChange={handleChange("brand")}
               />
+
               <Button
                 variant="contained"
                 className={classes3.button}
-                onClick={editModalOpen.open ? updateData : equipAdd}
+                onClick={editModalOpen.open ? updateData : benefitAdd}
               >
                 Submit
               </Button>
@@ -387,17 +424,17 @@ export default function FeedbackManagement() {
         <div className="col-md-8">
           <KTCodeExample
             jsCode={jsCode1}
-            beforeCodeTitle="View Equipment"
+            beforeCodeTitle="View Feedback"
             codeBlockHeight="400px"
           >
             <Paper className={classes4.root}>
               <Table className={classes4.table}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>GYM Name</TableCell>
-                    <TableCell align="right">Equipment</TableCell>
-                    <TableCell align="right">Quantity</TableCell>
-                    <TableCell align="right">Brand</TableCell>
+                    <TableCell>GYM Id</TableCell>
+                    <TableCell align="right">Status</TableCell>
+                    <TableCell align="right">Description</TableCell>
+                    <TableCell align="right">Image</TableCell>
                     <TableCell align="right">Action</TableCell>
                   </TableRow>
                 </TableHead>
@@ -407,14 +444,14 @@ export default function FeedbackManagement() {
                       <TableCell component="th" scope="row">
                         {row.gym_id}
                       </TableCell>
-                      <TableCell align="right">{row.equipment}</TableCell>
-                      <TableCell align="right">{row.quantity}</TableCell>
-                      <TableCell align="right">{row.brand}</TableCell>
+                      <TableCell align="right">{row.status}</TableCell>
+                      <TableCell align="right">{row.description}</TableCell>
+                      <TableCell align="right">{row.image}</TableCell>
                       <TableCell align="right">
                         <Button
                           variant="contained"
                           className={classes3.button}
-                          onClick={() => getParticularEquipment(row.uid)}
+                          onClick={() => getParticularBenefit(row.uid)}
                         >
                           Edit
                         </Button>

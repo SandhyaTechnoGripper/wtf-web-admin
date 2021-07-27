@@ -137,7 +137,7 @@ export default function EquipmentManagement() {
   };
 
   const handleChange = (name) => (event) => {
-    console.log(event)
+    console.log(event);
     setValues({ ...values, [name]: event.target.value });
   };
 
@@ -180,15 +180,24 @@ export default function EquipmentManagement() {
       body: JSON.stringify(values),
     };
     fetch("http://13.232.102.139:9000/equipment/add/", requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        setSuccessSnackBarOpen(true);
-        setMessage({
-          type: "success",
-          message: "Equipment Added Successfully",
-        });
-        fetchGetData();
-      });
+      .then((response) => {
+        if (response.ok) {
+          fetchGetData();
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "success",
+            message: "Equipment Added Successfully",
+          });
+        } else {
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "error",
+            message: "Equipment Addition failed",
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {});
   };
 
   const getParticularEquipment = (id) => {
