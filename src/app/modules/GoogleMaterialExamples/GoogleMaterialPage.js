@@ -16,7 +16,7 @@ export default function GoogleMaterialPage() {
       <Redirect
         exact={true}
         from="/google-material"
-        to="/google-material/inputs/autocomplete"
+        to="/gym"
       />
       {/* Surfaces */}
       <ContentRoute from="/google-material/surfaces" component={SurfacesPage} />

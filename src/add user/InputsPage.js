@@ -17,21 +17,21 @@ export function InputsPage() {
     <Switch>
       <Redirect
         exact={true}
-        from="/google-material/inputs"
-        to="/google-material/inputs/autocomplete"
+        from="/app/modules/pages"
+        to="/app/modules/pages/gym"
       />
 
       <ContentRoute
-        path="/google-material/inputs/autocomplete"
-        component={AutocompleteExamplesPage}
+        path="/app/modules/pages/allusers"
+        component={UserManagement}
       />
       <ContentRoute
-        path="/google-material/inputs/buttons"
-        component={ButtonsExamplesPage}
+        path="/app/modules/pages/tariner"
+        component={TrainerManagement}
       />
       <ContentRoute
-        path="/google-material/inputs/checkboxes"
-        component={CheckboxesExamplesPage}
+        path="/app/modules/pages/gym"
+        component={GymManagement}
       />
       <ContentRoute
         path="/google-material/inputs/pickers"

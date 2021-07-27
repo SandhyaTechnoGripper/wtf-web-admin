@@ -158,7 +158,7 @@ export default function TrainerManagement() {
   return (
     <>
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-3">
           <KTCodeExample
             // jsCode={jsCode2}
             beforeCodeTitle="Add Trainer"
@@ -280,7 +280,7 @@ export default function TrainerManagement() {
           </KTCodeExample>
         </div>
 
-        <div className="col-md-8">
+        <div className="col-md-9">
           <KTCodeExample
             // jsCode={jsCode4}
             beforeCodeTitle="View Trainer"

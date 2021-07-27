@@ -105,18 +105,18 @@ export function AsideMenuList({ layoutProps }) {
                     {/*begin::3 Level*/}
                     <li
                       className={`menu-item  ${getMenuItemActive(
-                        "/google-material/inputs/autocomplete"
+                        "/gym"
                       )}`}
                       aria-haspopup="true"
                     >
                       <NavLink
                         className="menu-link"
-                        to="/google-material/inputs/autocomplete"
+                        to="/gym"
                       >
                         <i className="menu-bullet menu-bullet-dot">
                           <span />
                         </i>
-                        <span className="menu-text">Autocomplete</span>
+                        <span className="menu-text">GYM management</span>
                       </NavLink>
                     </li>
                     {/*end::3 Level*/}

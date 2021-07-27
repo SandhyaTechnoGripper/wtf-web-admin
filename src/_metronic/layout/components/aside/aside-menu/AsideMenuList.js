@@ -67,7 +67,7 @@ export function AsideMenuList({ layoutProps }) {
             <span className="svg-icon menu-icon">
               <SVG src={toAbsoluteUrl("/media/svg/icons/Design/Cap-2.svg")} />
             </span>
-            <span className="menu-text">Material UI</span>
+            <span className="menu-text">Managemnet</span>
             <i className="menu-arrow" />
           </NavLink>
           <div className="menu-submenu ">
@@ -83,7 +83,7 @@ export function AsideMenuList({ layoutProps }) {
               {/*begin::2 Level*/}
               <li
                 className={`menu-item menu-item-submenu ${getMenuItemActive(
-                  "/google-material/inputs",
+                  "/app/modules/inputs",
                   true
                 )}`}
                 aria-haspopup="true"
@@ -91,7 +91,7 @@ export function AsideMenuList({ layoutProps }) {
               >
                 <NavLink
                   className="menu-link menu-toggle"
-                  to="/google-material/inputs"
+                  to="/app/modules/pages"
                 >
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
@@ -105,7 +105,7 @@ export function AsideMenuList({ layoutProps }) {
                     {/*begin::3 Level*/}
                     <li
                       className={`menu-item  ${getMenuItemActive(
-                        "/google-material/inputs/switches"
+                        "/gym"
                         
                       )}`}
                       aria-haspopup="true"
@@ -125,7 +125,7 @@ export function AsideMenuList({ layoutProps }) {
                     {/*begin::3 Level*/}
                     <li
                       className={`menu-item ${getMenuItemActive(
-                        "/google-material/inputs/buttons"
+                        "/app/module/pages/allusers"
                       )}`}
                       aria-haspopup="true"
                     >
@@ -136,7 +136,7 @@ export function AsideMenuList({ layoutProps }) {
                         <i className="menu-bullet menu-bullet-dot">
                           <span />
                         </i>
-                        <span className="menu-text">EquipmentManagement</span>
+                        <span className="menu-text">UserManagement</span>
                       </NavLink>
                     </li>
                     {/*end::3 Level*/}
@@ -144,18 +144,18 @@ export function AsideMenuList({ layoutProps }) {
                     {/*begin::3 Level*/}
                     <li
                       className={`menu-item ${getMenuItemActive(
-                        "/google-material/inputs/checkboxes"
+                        "/app/modules/pages/trainer"
                       )}`}
                       aria-haspopup="true"
                     >
                       <NavLink
                         className="menu-link"
-                        to="/google-material/inputs/checkboxes"
+                        to="/app/modules/pages/trainer"
                       >
                         <i className="menu-bullet menu-bullet-dot">
                           <span />
                         </i>
-                        <span className="menu-text">Checkboxes</span>
+                        <span className="menu-text">Trainer</span>
                       </NavLink>
                     </li>
                     {/*end::3 Level*/}
