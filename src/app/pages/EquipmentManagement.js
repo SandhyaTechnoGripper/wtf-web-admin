@@ -21,16 +21,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import PopUpToast from "../../_metronic/layout/components/PopUpToast/PopUpToast";
 
-// const currencies = [
-//   {
-//     value: "Active",
-//     label: "Active",
-//   },
-//   {
-//     value: "Inactive",
-//     label: "Inactive",
-//   },
-// ];
+
 // update equipment
 const useStyles3 = makeStyles((theme) => ({
   container: {
@@ -78,7 +69,60 @@ const useStyles2 = makeStyles((theme) => ({
     width: 200,
   },
 }));
+// submit button
+const useStyles1 = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+    backgroundColor: '#FF0000',
+    color: '#FFFFFF',
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width:200,
 
+  },
+  menu: {
+    width: 350,
+  },
+  input: {
+    display: "none",
+  },
+}));
+//edit button
+const useStyles5 = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+    backgroundColor: '#000000',
+    color: '#FFFFFF',
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    padding: '6px 12px 6px 12px',
+
+
+  },
+  menu: {
+    width: 350,
+  },
+  input: {
+    display: "none",
+  },
+}));
+//delete button
+const useStyles6 = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+    backgroundColor: '#FF0000',
+    color: '#FFFFFF',
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    // width:150,
+    // padding:'8px 8px 8px 8px'
+
+  },
+  
+  input: {
+    display: "none",
+  },
+}));
 export default function EquipmentManagement() {
   const { authToken } = useSelector(
     ({ auth }) => ({
@@ -92,6 +136,13 @@ export default function EquipmentManagement() {
   const classes4 = useStyles4();
   // add equipment
   const classes2 = useStyles2();
+  //submit button
+  const classes1 = useStyles1();
+  //edit button
+  const classes5 = useStyles5();
+  //delete button
+  const classes6 = useStyles6();
+
 
   const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
   const [message, setMessage] = useState({
@@ -315,7 +366,7 @@ export default function EquipmentManagement() {
             codeBlockHeight="400px"
           >
            
-            <div className="separator separator-dashed my-7"></div>
+            
             <form className={classes2.container} noValidate autoComplete="off">
               <TextField
                 id="outlined-select-currency"
@@ -377,10 +428,10 @@ export default function EquipmentManagement() {
               />
               <Button
                 variant="contained"
-                className={classes3.button}
+                className={classes1.button}
                 onClick={editModalOpen.open ? updateData : equipAdd}
               >
-                Submit
+                Save & Continue
               </Button>
             </form>
           </KTCodeExample>
@@ -396,11 +447,11 @@ export default function EquipmentManagement() {
               <Table className={classes4.table}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>GYM Name</TableCell>
-                    <TableCell align="right">Equipment</TableCell>
-                    <TableCell align="right">Quantity</TableCell>
-                    <TableCell align="right">Brand</TableCell>
-                    <TableCell align="right">Action</TableCell>
+                    <TableCell align="left">GYM Name</TableCell>
+                    <TableCell align="left">Equipment</TableCell>
+                    <TableCell align="left">Quantity</TableCell>
+                    <TableCell align="left">Brand</TableCell>
+                    <TableCell align="left">Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -409,20 +460,20 @@ export default function EquipmentManagement() {
                       <TableCell component="th" scope="row">
                         {row.gym_id}
                       </TableCell>
-                      <TableCell align="right">{row.equipment}</TableCell>
-                      <TableCell align="right">{row.quantity}</TableCell>
-                      <TableCell align="right">{row.brand}</TableCell>
-                      <TableCell align="right">
+                      <TableCell align="left">{row.equipment}</TableCell>
+                      <TableCell align="left">{row.quantity}</TableCell>
+                      <TableCell align="left">{row.brand}</TableCell>
+                      <TableCell align="left">
                         <Button
                           variant="contained"
-                          className={classes3.button}
+                          className={classes5.button}
                           onClick={() => getParticularEquipment(row.uid)}
                         >
                           Edit
                         </Button>
                         <Button
                           variant="contained"
-                          className={classes3.button}
+                          className={classes6.button}
                           onClick={() => deleteData(row.uid)}
                         >
                           Delete

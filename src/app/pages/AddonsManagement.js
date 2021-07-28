@@ -20,18 +20,25 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import PopUpToast from "../../_metronic/layout/components/PopUpToast/PopUpToast";
+//submit button
+const useStyles1 = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+    backgroundColor: '#FF0000',
+    color: '#FFFFFF',
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width:200,
 
-// const currencies = [
-//   {
-//     value: "Active",
-//     label: "Active",
-//   },
-//   {
-//     value: "Inactive",
-//     label: "Inactive",
-//   },
-// ];
-// update equipment
+  },
+  menu: {
+    width: 350,
+  },
+  input: {
+    display: "none",
+  },
+}));
+//update 
 const useStyles3 = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -92,6 +99,8 @@ export default function AddonsManagement() {
   const classes4 = useStyles4();
   // add equipment
   const classes2 = useStyles2();
+  //submit button
+  const classes1 = useStyles1();
 
   const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(false);
@@ -413,10 +422,10 @@ export default function AddonsManagement() {
               />
               <Button
                 variant="contained"
-                className={classes3.button}
+                className={classes1.button}
                 onClick={editModalOpen.open ? updateData : addonAdd}
               >
-                Submit
+                Save & Continue
               </Button>
             </form>
           </KTCodeExample>
@@ -432,13 +441,13 @@ export default function AddonsManagement() {
               <Table className={classes4.table}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>GYM Name</TableCell>
-                    <TableCell align="right">Name</TableCell>
-                    <TableCell align="right">Description</TableCell>
-                    <TableCell align="right">Price</TableCell>
-                    <TableCell align="right">Image</TableCell>
-                    <TableCell align="right">Status</TableCell>
-                    <TableCell align="center">Action</TableCell>
+                    <TableCell align="left">GYM Name</TableCell>
+                    <TableCell align="left">Name</TableCell>
+                    <TableCell align="left">Description</TableCell>
+                    <TableCell align="left">Price</TableCell>
+                    <TableCell align="left">Image</TableCell>
+                    <TableCell align="left">Status</TableCell>
+                    <TableCell align="left">Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -447,13 +456,13 @@ export default function AddonsManagement() {
                       <TableCell component="th" scope="row">
                         {row.gym_id}
                       </TableCell>
-                      <TableCell align="right">{row.name}</TableCell>
-                      <TableCell align="right">{row.description}</TableCell>
-                      <TableCell align="right">{row.price}</TableCell>
-                      <TableCell align="right">{row.image}</TableCell>
-                      <TableCell align="right">{row.status}</TableCell>
-                      <TableCell align="right">{row.action}</TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left">{row.name}</TableCell>
+                      <TableCell align="left">{row.description}</TableCell>
+                      <TableCell align="left">{row.price}</TableCell>
+                      <TableCell align="left">{row.image}</TableCell>
+                      <TableCell align="left">{row.status}</TableCell>
+                      <TableCell align="left">{row.action}</TableCell>
+                      <TableCell align="left">
                         <Button
                           variant="contained"
                           className={classes3.button}
