@@ -208,7 +208,7 @@ export default function FeedbackManagement() {
   return (
     <>
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-3">
           <KTCodeExample
             jsCode={jsCode1}
             beforeCodeTitle="Add Feedback"
@@ -289,7 +289,7 @@ export default function FeedbackManagement() {
           </KTCodeExample>
         </div>
 
-        <div className="col-md-8">
+        <div className="col-md-9">
           <KTCodeExample
             jsCode={jsCode1}
             beforeCodeTitle="View Feedback"
@@ -314,6 +314,7 @@ export default function FeedbackManagement() {
                       <TableCell align="right">{row.status}</TableCell>
                       <TableCell align="right">{row.description}</TableCell>
                       <TableCell align="right">{row.image}</TableCell>
+                      
                     </TableRow>
                   ))}
                 </TableBody>

@@ -6,8 +6,8 @@ import {OverlayTrigger, Tooltip} from "react-bootstrap";
 export function StickyToolbar() {
   return (
     <>
-      <ul className="sticky-toolbar nav flex-column pl-2 pr-2 pt-3 pb-3 mt-4">
-        <OverlayTrigger
+      {/* <ul className="sticky-toolbar nav flex-column pl-2 pr-2 pt-3 pb-3 mt-4"> */}
+        {/* <OverlayTrigger
           placement="left"
           overlay={<Tooltip id="layout-tooltip">Layout Builder</Tooltip>}
         >
@@ -19,9 +19,9 @@ export function StickyToolbar() {
               <i className="flaticon2-gear"></i>
             </Link>
           </li>
-        </OverlayTrigger>
+        </OverlayTrigger> */}
 
-        <OverlayTrigger
+        {/* <OverlayTrigger
           placement="left"
           overlay={<Tooltip id="documentations-tooltip">Documentation</Tooltip>}
         >
@@ -35,8 +35,8 @@ export function StickyToolbar() {
               <i className="flaticon2-telegram-logo"></i>
             </a>
           </li>
-        </OverlayTrigger>
-      </ul>
+        </OverlayTrigger> */}
+      {/* </ul> */}
     </>
   );
 }

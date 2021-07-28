@@ -60,10 +60,10 @@ export function Layout({ children }) {
               {layoutProps.contentExtended && (
                 <>
                   {layoutProps.asideDisplay && (
-                    <div className="d-lg-flex flex-row-fluid">
-                      <Aside />
-                      <div className="content-wrapper">{children}</div>
-                    </div>
+                    // <div className="d-lg-flex flex-row-fluid">
+                      {/* <Aside /> */}
+                      // <div className="content-wrapper">{children}</div>
+                    // </div>
                   )}
 
                   {!layoutProps.asideDisplay && <>{children}</>}

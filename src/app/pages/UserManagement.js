@@ -27,12 +27,52 @@ import PopUpToast from "../../_metronic/layout/components/PopUpToast/PopUpToast"
 const useStyles3 = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
+    backgroundColor: '#FF0000',
+    color: '#FFFFFF',
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width:200,
+
+  },
+  menu: {
+    width: 350,
   },
   input: {
     display: "none",
   },
 }));
+//edit button
+const useStyles5 = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+    backgroundColor: '#000000',
+    color: '#FFFFFF',
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
 
+  },
+  menu: {
+    width: 350,
+  },
+  input: {
+    display: "none",
+  },
+}));
+//delete button
+const useStyles6 = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+    backgroundColor: '#FF0000',
+    color: '#FFFFFF',
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+
+  },
+  
+  input: {
+    display: "none",
+  },
+}));
 //view user
 const useStyles4 = makeStyles((theme) => ({
   root: {
@@ -69,6 +109,12 @@ export default function UserManagement() {
   const classes3 = useStyles3();
   //view user
   const classes4 = useStyles4();
+  //edit button
+  const classes5 = useStyles5();
+  //delete button
+  const classes6 = useStyles6();
+
+
 
   const classes2 = useStyles2();
   const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
@@ -125,6 +171,7 @@ export default function UserManagement() {
     })
       .then((response) => response.json())
       .then((responseJson) => {
+        console.log(responseJson)
         setGetData(responseJson.data);
       });
   };
@@ -307,10 +354,10 @@ export default function UserManagement() {
             }`}
             codeBlockHeight="400px"
           >
-            <span>
+            {/* <span>
               <code>TextField</code> supports outlined styling.
-            </span>
-            <div className="separator separator-dashed my-7"></div>
+            </span> */}
+            {/* <div className="separator separator-dashed my-7"></div> */}
             <form className={classes2.container} noValidate autoComplete="off">
               <TextField
                 id="outlined-name"
@@ -366,10 +413,12 @@ export default function UserManagement() {
               />
               <Button
                 variant="contained"
+                margin="normal"
                 className={classes3.button}
                 onClick={editModalOpen.open ? updateData : Useradd}
+                
               >
-                Submit
+                Save & Continue
               </Button>
             </form>
           </KTCodeExample>
@@ -385,10 +434,9 @@ export default function UserManagement() {
               <Table className={classes4.table}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
+                    <TableCell>User Details</TableCell>
                     <TableCell align="right">Account type</TableCell>
-                    <TableCell align="right">Email</TableCell>
-                    <TableCell align="right">Phone</TableCell>
+                    <TableCell align="right">Last Login</TableCell>
                     <TableCell align="right">Status</TableCell>
                     <TableCell align="center">Action</TableCell>
                   </TableRow>
@@ -397,23 +445,22 @@ export default function UserManagement() {
                   {getData?.map((row) => (
                     <TableRow key={row.uid}>
                       <TableCell component="th" scope="row">
-                        {row.name}
+                        {row.name} |{row.email}| {row.mobile}
                       </TableCell>
                       <TableCell align="right">{row.account_type}</TableCell>
-                      <TableCell align="right">{row.email}</TableCell>
-                      <TableCell align="right">{row.mobile}</TableCell>
+                      <TableCell align="right">{row.last_ip} | {row.date_added}</TableCell>
                       <TableCell align="right">{row.status}</TableCell>
                       <TableCell allign="right">
                         <Button
                           variant="contained"
-                          className={classes3.button}
+                          className={classes5.button}
                           onClick={() => getParticularUser(row.uid)}
                         >
                           Edit
                         </Button>
                         <Button
                           variant="contained"
-                          className={classes3.button}
+                          className={classes6.button}
                           onClick={() => deleteData(row.uid)}
                         >
                           Delete

@@ -334,7 +334,7 @@ export default function OfferManagement() {
   return (
     <>
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-3">
           <KTCodeExample
             jsCode={jsCode1}
             beforeCodeTitle={`${
@@ -449,7 +449,7 @@ export default function OfferManagement() {
           </KTCodeExample>
         </div>
 
-        <div className="col-md-8">
+        <div className="col-md-9">
           <KTCodeExample
             jsCode={jsCode1}
             beforeCodeTitle="View Offer"
