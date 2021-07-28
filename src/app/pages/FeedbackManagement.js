@@ -99,10 +99,7 @@ export default function FeedbackManagement() {
     type: "suceess",
     message: "",
   });
-  const [editModalOpen, setEditModalOpen] = useState({
-    open: false,
-    id: null,
-  });
+
   const [getData, setGetData] = useState([]);
   const [getGymData, setGymData] = useState([]);
 
@@ -113,7 +110,7 @@ export default function FeedbackManagement() {
     description: "",
   });
   const [values, setValues] = useState({
-    user_id: "123",
+    user_id: "",
     gym_id: "",
     related_to: "",
     description: "",
@@ -158,7 +155,7 @@ export default function FeedbackManagement() {
       });
   };
 
-  const benefitAdd = (e) => {
+  const feedbackAdd = (e) => {
     e.preventDefault();
 
     const data = new FormData();
@@ -169,16 +166,12 @@ export default function FeedbackManagement() {
     data.append("attachment", selectedFile);
 
     if (values.gym_id === "") {
-      return setError({ user_id: "*GYM Id is mandatary" });
+      return setError({ gym_id: "*GYM Name is mandatary" });
     }
-
-    if (values.gym_id === "") {
-      return setError({ gym_id: "*GYM Id is mandatary" });
-    }
-    if (values.name === "") {
+    if (values.related_to === "") {
       return setError({ related_to: "*Title is mandatary" });
     }
-    if (values.breif === "") {
+    if (values.description === "") {
       return setError({ description: "*Description is mandatary" });
     }
 
@@ -212,124 +205,13 @@ export default function FeedbackManagement() {
       .then((data) => {});
   };
 
-  const getParticularBenefit = (id) => {
-    if (editModalOpen.open) {
-      setValues({
-        user_id: "",
-        gym_id: "",
-        related_to: "",
-        description: "",
-      });
-      return setEditModalOpen({ open: false, id: null });
-    }
-    setEditModalOpen({ open: true, id: id });
-    let benefit = getData.filter((data) => data.uid === id);
-    setValues({
-      user_id: benefit[0].user_id,
-      gym_id: benefit[0].gym_id,
-      related_to: benefit[0].related_to,
-      description: benefit[0].description,
-    });
-  };
-
-  const updateData = (e) => {
-    e.preventDefault();
-
-    const data = new FormData();
-    data.append("user_id", values.user_id);
-    data.append("gym_id", values.gym_id);
-    data.append("related_to", values.related_to);
-    data.append("description", values.description);
-    data.append("attachment", selectedFile);
-
-    if (values.gym_id === "") {
-      return setError({ user_id: "*GYM Id is mandatary" });
-    }
-
-    if (values.gym_id === "") {
-      return setError({ gym_id: "*GYM Id is mandatary" });
-    }
-    if (values.name === "") {
-      return setError({ related_to: "*Title is mandatary" });
-    }
-    if (values.breif === "") {
-      return setError({ description: "*Description is mandatary" });
-    }
-
-    const requestOptions = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: data,
-    };
-    fetch("http://13.232.102.139:9000/feedback/update", requestOptions).then(
-      (response) => {
-        if (response.ok) {
-          // success
-          setSuccessSnackBarOpen(true);
-          setMessage({
-            type: "success",
-            message: "Feedback Updated Successfully",
-          });
-          fetchGetData();
-          setValues({
-            gym_id: "",
-            name: "",
-            breif: "",
-          });
-        } else {
-          // error
-          setMessage({
-            type: "error",
-            message: "Feedback Updation failed",
-          });
-        }
-      }
-    );
-  };
-
-  const deleteData = (id) => {
-    const requestOptions = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({ uid: id }),
-    };
-    fetch("http://13.232.102.139:9000/feedback/delete", requestOptions).then(
-      (response) => {
-        if (response.ok) {
-          // success
-
-          setSuccessSnackBarOpen(true);
-          setMessage({
-            type: "success",
-            message: "Feedback Deleted Successfully",
-          });
-          let data = getData.filter((data) => data.uid !== id);
-          setGetData(data);
-        } else {
-          // error
-          setMessage({
-            type: "error",
-            message: "Feedback deletion failed",
-          });
-        }
-      }
-    );
-  };
   return (
     <>
       <div className="row">
         <div className="col-md-4">
           <KTCodeExample
             jsCode={jsCode1}
-            beforeCodeTitle={`${
-              !editModalOpen.open ? "Add Feedback" : "Update Feedback"
-            }`}
+            beforeCodeTitle="Add Feedback"
             codeBlockHeight="400px"
           >
             <span>
@@ -337,43 +219,29 @@ export default function FeedbackManagement() {
             </span>
             <div className="separator separator-dashed my-7"></div>
             <form className={classes2.container} noValidate autoComplete="off">
-              {editModalOpen.open ? (
-                <TextField
-                  id="outlined-select-currency"
-                  select
-                  name="gym_id"
-                  label="Gym Name"
-                  className={classes2.textField}
-                  value={values.gym_id}
-                  onChange={handleChange("gym_id")}
-                  SelectProps={{
-                    MenuProps: {
-                      className: classes2.menu,
-                    },
-                  }}
-                  margin="normal"
-                  variant="outlined"
-                >
-                  {getGymData?.length > 0 &&
-                    getGymData.map((option) => (
-                      <MenuItem key={option.uid} value={option.gym_name}>
-                        {option.gym_name}
-                      </MenuItem>
-                    ))}
-                </TextField>
-              ) : (
-                <TextField
-                  // error
-                  id="outlined-error"
-                  name="gym_id"
-                  label="GYM Id"
-                  className={classes2.textField}
-                  margin="normal"
-                  variant="outlined"
-                  value={values.gym_id}
-                  onChange={handleChange("gym_id")}
-                />
-              )}
+              <TextField
+                id="outlined-select-currency"
+                select
+                name="gym_id"
+                label="Gym Name"
+                className={classes2.textField}
+                value={values.gym_id}
+                onChange={handleChange("gym_id")}
+                SelectProps={{
+                  MenuProps: {
+                    className: classes2.menu,
+                  },
+                }}
+                margin="normal"
+                variant="outlined"
+              >
+                {getGymData?.length > 0 &&
+                  getGymData.map((option) => (
+                    <MenuItem key={option.uid} value={option.gym_name}>
+                      {option.gym_name}
+                    </MenuItem>
+                  ))}
+              </TextField>
 
               <TextField
                 // error
@@ -413,7 +281,7 @@ export default function FeedbackManagement() {
               <Button
                 variant="contained"
                 className={classes3.button}
-                onClick={editModalOpen.open ? updateData : benefitAdd}
+                onClick={feedbackAdd}
               >
                 Submit
               </Button>
@@ -431,11 +299,10 @@ export default function FeedbackManagement() {
               <Table className={classes4.table}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>GYM Id</TableCell>
+                    <TableCell>GYM Name</TableCell>
                     <TableCell align="right">Status</TableCell>
                     <TableCell align="right">Description</TableCell>
                     <TableCell align="right">Image</TableCell>
-                    <TableCell align="right">Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -447,22 +314,6 @@ export default function FeedbackManagement() {
                       <TableCell align="right">{row.status}</TableCell>
                       <TableCell align="right">{row.description}</TableCell>
                       <TableCell align="right">{row.image}</TableCell>
-                      <TableCell align="right">
-                        <Button
-                          variant="contained"
-                          className={classes3.button}
-                          onClick={() => getParticularBenefit(row.uid)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="contained"
-                          className={classes3.button}
-                          onClick={() => deleteData(row.uid)}
-                        >
-                          Delete
-                        </Button>
-                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

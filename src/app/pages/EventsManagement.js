@@ -104,7 +104,6 @@ export default function EventManagement() {
     id: null,
   });
   const [getData, setGetData] = useState([]);
-  const [getGymData, setGymData] = useState([]);
 
   const [error, setError] = useState({
     name: "",
@@ -224,14 +223,14 @@ export default function EventManagement() {
     }
 
     setEditModalOpen({ open: true, id: id });
-    let benefit = getData.filter((data) => data.uid === id);
+    let event = getData.filter((data) => data.uid === id);
     setValues({
-      name: benefit[0].name,
-      mode: benefit[0].mode,
-      date: benefit[0].date,
-      is_public: benefit[0].is_public,
-      description: benefit[0].description,
-      price: benefit[0].price,
+      name: event[0].name,
+      mode: event[0].mode,
+      date: event[0].date,
+      is_public: event[0].is_public,
+      description: event[0].description,
+      price: event[0].price,
     });
   };
 
@@ -239,14 +238,16 @@ export default function EventManagement() {
     e.preventDefault();
 
     const data = new FormData();
-
     data.append("name", values.name);
     data.append("mode", values.mode);
     data.append("date", values.date);
     data.append("is_public", values.is_public);
     data.append("description", values.description);
     data.append("price", values.price);
-    data.append("image", selectedFile);
+
+    if (selectedFile) {
+      data.append("image", selectedFile);
+    }
 
     if (values.mode === "") {
       return setError({ mode: "*Name is mandatary" });
@@ -270,7 +271,7 @@ export default function EventManagement() {
     const requestOptions = {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
+        // "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
       body: data,
@@ -292,6 +293,7 @@ export default function EventManagement() {
           });
         } else {
           // error
+          setSuccessSnackBarOpen(true);
           setMessage({
             type: "error",
             message: "Event Updation failed",

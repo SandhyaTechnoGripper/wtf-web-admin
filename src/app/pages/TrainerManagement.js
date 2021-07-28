@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-imports */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import axios from "axios";
 import clsx from "clsx";
@@ -12,10 +12,7 @@ import {
   createMuiTheme,
 } from "@material-ui/core/styles";
 
-import {
-  Notice,
-  KTCodeExample,
-} from "../../_metronic/_partials/controls";
+import { Notice, KTCodeExample } from "../../_metronic/_partials/controls";
 import MenuItem from "@material-ui/core/MenuItem";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -25,6 +22,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import { getDate } from "date-fns";
+import PopUpToast from "../../_metronic/layout/components/PopUpToast/PopUpToast";
 
 // Submit
 const useStyles3 = makeStyles((theme) => ({
@@ -35,7 +33,6 @@ const useStyles3 = makeStyles((theme) => ({
     display: "none",
   },
 }));
-
 
 //view user
 const useStyles4 = makeStyles((theme) => ({
@@ -70,27 +67,55 @@ const useStyles2 = makeStyles((theme) => ({
 export default function TrainerManagement() {
   // submit button
   const classes3 = useStyles3();
-
   //view gym
   const classes4 = useStyles4();
   // add gym
   const classes2 = useStyles2();
-  const [selectedFile, setSelectedFile] = React.useState({
-    aadhar_card: null,
-    electricity_bill: null,
-    bank_statement: null,
+
+  const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
+  const [message, setMessage] = useState({
+    type: "suceess",
+    message: "",
   });
-  const [getData, setGetData] = React.useState([]);
-  const [values, setValues] = React.useState({
+
+  const [editModalOpen, setEditModalOpen] = useState({
+    open: false,
+    id: null,
+  });
+
+  const [selectedFile, setSelectedFile] = useState({
+    aadhar_card: null,
+    pan_card: null,
+  });
+
+  const [getData, setGetData] = useState([]);
+  const [values, setValues] = useState({
     name: "",
+    gym_name: "",
+    gym_id: "",
+    email: "",
     address1: "",
     address2: "",
     city: "",
     state: "",
     pin: "",
     country: "",
-    latitudet: "",
-    longitude: "",
+    date_oboarding: "",
+    user_id: "",
+  });
+  const [error, setError] = useState({
+    name: "",
+    gym_name: "",
+    gym_id: "",
+    email: "",
+    address1: "",
+    address2: "",
+    city: "",
+    state: "",
+    pin: "",
+    country: "",
+    date_oboarding: "",
+    user_id: "",
   });
   const { authToken } = useSelector(
     ({ auth }) => ({
@@ -107,22 +132,64 @@ export default function TrainerManagement() {
     setValues({ ...values, [name]: event.target.value });
   };
 
-  const handleInput = () => {
+  const trainerAdd = () => {
+    if (values.name === "") {
+      return setError({ name: "*Name is mandatary" });
+    }
+    if (values.gym_name === "") {
+      return setError({ gym_name: "*GYM Name is mandatary" });
+    }
+    if (
+      !values.email ||
+      !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        values.email
+      )
+    ) {
+      return setError({ email: "*Please enter valid email" });
+    }
+    if (values.address1 === "") {
+      return setError({ address1: "*Address 1 is mandatary" });
+    }
+    if (values.address2 === "") {
+      return setError({ address2: "*Address 2 is mandatary" });
+    }
+    if (values.city === "") {
+      return setError({ city: "*City is mandatary" });
+    }
+    if (values.state === "") {
+      return setError({ state: "*State is mandatary" });
+    }
+    if (values.pin === "") {
+      return setError({ pin: "*Pin is mandatary" });
+    }
+    if (values.country === "") {
+      return setError({ country: "*Country is mandatary" });
+    }
+    if (values.date_oboarding === "") {
+      return setError({ date_oboarding: "*Date is mandatary" });
+    }
+    if (!selectedFile.aadhar_card) {
+      return setError({ aadhar_card: "*Aadhar card is mandatary" });
+    }
+    if (!selectedFile.pan_card) {
+      return setError({ pan_card: "*Pan card is mandatary" });
+    }
+
     const data = new FormData();
     data.append("name", values.name);
-    data.append("gym_name", values.name);
-    data.append("gym_id", "123");
-    data.append("email", "a@a.com");
+    data.append("gym_name", values.gym_name);
+    data.append("gym_id", values.gym_id);
+    data.append("email", values.email);
     data.append("address1", values.address1);
     data.append("address2", values.address2);
     data.append("city", values.city);
     data.append("state", values.state);
     data.append("pin", values.pin);
     data.append("country", values.country);
-    data.append("date_oboarding", "1221212");
+    data.append("date_oboarding", values.date_oboarding);
     data.append("aadhar_card", selectedFile.aadhar_card);
     data.append("pan_card", selectedFile.pan_card);
-    data.append("user_id", "zeWBVGFpEKTBh");
+    data.append("user_id", values.user_id);
 
     fetch("http://13.232.102.139:9000/trainer/add", {
       method: "POST",
@@ -132,12 +199,25 @@ export default function TrainerManagement() {
       },
       body: data,
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          fetchGetData();
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "success",
+            message: "Trainer Added Successfully",
+          });
+        } else {
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "error",
+            message: "Trainer Added failed",
+          });
+        }
+        return response.json();
+      })
       .then((values) => {
         console.log("Success PostData:", values);
-      })
-      .catch((error) => {
-        console.log(error);
       });
   };
   const fetchGetData = () => {
@@ -155,13 +235,186 @@ export default function TrainerManagement() {
       });
   };
 
+  const getParticularTrainer = (id) => {
+    if (editModalOpen.open) {
+      setValues({
+        name: "",
+        gym_name: "",
+        gym_id: "",
+        email: "",
+        address1: "",
+        address2: "",
+        city: "",
+        state: "",
+        pin: "",
+        country: "",
+        date_oboarding: "",
+      });
+      return setEditModalOpen({ open: false, id: null });
+    }
+
+    setEditModalOpen({ open: true, id: id });
+    let trainer = getData.filter((data) => data.uid === id);
+    setValues({
+      name: trainer[0].name,
+      user_id: trainer[0].user_id,
+      gym_name: trainer[0].gym_name,
+      gym_id: trainer[0].gym_id,
+      email: trainer[0].email,
+      address1: trainer[0].address1,
+      address2: trainer[0].address2,
+      city: trainer[0].city,
+      state: trainer[0].state,
+      pin: trainer[0].pin,
+      country: trainer[0].country,
+      date_oboarding: trainer[0].date_oboarding,
+    });
+  };
+
+  const updateData = (e) => {
+    e.preventDefault();
+
+    if (values.name === "") {
+      return setError({ name: "*Name is mandatary" });
+    }
+    if (values.gym_name === "") {
+      return setError({ gym_name: "*GYM Name is mandatary" });
+    }
+    if (
+      !values.email ||
+      !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        values.email
+      )
+    ) {
+      return setError({ email: "*Please enter valid email" });
+    }
+    if (values.address1 === "") {
+      return setError({ address1: "*Address 1 is mandatary" });
+    }
+    if (values.address2 === "") {
+      return setError({ address2: "*Address 2 is mandatary" });
+    }
+    if (values.city === "") {
+      return setError({ city: "*City is mandatary" });
+    }
+    if (values.state === "") {
+      return setError({ state: "*State is mandatary" });
+    }
+    if (values.pin === "") {
+      return setError({ pin: "*Pin is mandatary" });
+    }
+    if (values.country === "") {
+      return setError({ country: "*Country is mandatary" });
+    }
+    if (values.date_oboarding === "") {
+      return setError({ date_oboarding: "*Date is mandatary" });
+    }
+    if (!selectedFile.aadhar_card) {
+      return setError({ aadhar_card: "*Aadhar card is mandatary" });
+    }
+    if (!selectedFile.pan_card) {
+      return setError({ pan_card: "*Pan card is mandatary" });
+    }
+
+    const data = new FormData();
+    data.append("name", values.name);
+    data.append("gym_name", values.gym_name);
+    data.append("gym_id", values.gym_id);
+    data.append("email", values.email);
+    data.append("address1", values.address1);
+    data.append("address2", values.address2);
+    data.append("city", values.city);
+    data.append("state", values.state);
+    data.append("pin", values.pin);
+    data.append("country", values.country);
+    data.append("date_oboarding", values.date_oboarding);
+    data.append("aadhar_card", selectedFile.aadhar_card);
+    data.append("pan_card", selectedFile.pan_card);
+    data.append("user_id", values.user_id);
+
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        // "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: data,
+    };
+    fetch("http://13.232.102.139:9000/trainer/update", requestOptions).then(
+      (response) => {
+        if (response.ok) {
+          // success
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "success",
+            message: "Trainer Updated Successfully",
+          });
+          fetchGetData();
+          setValues({
+            name: "",
+            gym_name: "",
+            gym_id: "",
+            email: "",
+            address1: "",
+            address2: "",
+            city: "",
+            state: "",
+            pin: "",
+            country: "",
+            date_oboarding: "",
+          });
+        } else {
+          // error
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "error",
+            message: "Trainer Updation failed",
+          });
+        }
+      }
+    );
+  };
+
+  const deleteData = (id) => {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ uid: id }),
+    };
+    fetch("http://13.232.102.139:9000/trainer/delete", requestOptions).then(
+      (response) => {
+        if (response.ok) {
+          // success
+          setSuccessSnackBarOpen(true);
+          setMessage({
+            type: "success",
+            message: "Trainer Deleted Successfully",
+          });
+          let data = getData.filter((data) => data.uid !== id);
+          setGetData(data);
+        } else {
+          // error
+          setMessage({
+            type: "error",
+            message: "Trainer deletion failed",
+          });
+        }
+      }
+    );
+  };
+
   return (
     <>
       <div className="row">
         <div className="col-md-3">
           <KTCodeExample
             // jsCode={jsCode2}
-            beforeCodeTitle="Add Trainer"
+            beforeCodeTitle={`${
+              !editModalOpen.open ? "Add Trainer" : "Update Trainer"
+            }`}
             codeBlockHeight="400px"
           >
             <div className="separator separator-dashed my-7"></div>
@@ -172,6 +425,25 @@ export default function TrainerManagement() {
                 className={classes2.textField}
                 value={values.name}
                 onChange={handleChange("name")}
+                margin="normal"
+                variant="outlined"
+              />
+              <TextField
+                id="outlined-name"
+                label="GYM Name"
+                className={classes2.textField}
+                value={values.gym_name}
+                onChange={handleChange("gym_name")}
+                margin="normal"
+                variant="outlined"
+              />
+              <TextField
+                id="outlined-name"
+                label="Email"
+                type="email"
+                className={classes2.textField}
+                value={values.email}
+                onChange={handleChange("email")}
                 margin="normal"
                 variant="outlined"
               />
@@ -238,7 +510,18 @@ export default function TrainerManagement() {
 
               <TextField
                 id="outlined"
-                label="Electricity Bill"
+                label="Date"
+                type="date"
+                className={classes2.textField}
+                value={values.date_oboarding}
+                onChange={handleChange("date_oboarding")}
+                margin="normal"
+                variant="outlined"
+              />
+
+              <TextField
+                id="outlined"
+                label="Aadhar Card"
                 type="file"
                 className={classes2.textField}
                 //  name='electricity_bill'
@@ -254,7 +537,7 @@ export default function TrainerManagement() {
               />
               <TextField
                 id="outlined"
-                label="Bank Statement"
+                label="Pan card"
                 type="file"
                 className={classes2.textField}
                 //  name='electricity_bill'
@@ -273,7 +556,7 @@ export default function TrainerManagement() {
               type="submit"
               variant="contained"
               className={classes3.button}
-              onClick={handleInput}
+              onClick={editModalOpen.open ? updateData : trainerAdd}
             >
               Submit
             </Button>
@@ -321,11 +604,18 @@ export default function TrainerManagement() {
                       </TableCell>
                       <TableCell align="right">{row.bank_statement}</TableCell>
                       <Button
-                        type="submit"
                         variant="contained"
                         className={classes3.button}
+                        onClick={() => getParticularTrainer(row.uid)}
                       >
                         Edit
+                      </Button>
+                      <Button
+                        variant="contained"
+                        className={classes3.button}
+                        onClick={() => deleteData(row.uid)}
+                      >
+                        Delete
                       </Button>
                     </TableRow>
                   ))}
@@ -335,6 +625,14 @@ export default function TrainerManagement() {
           </KTCodeExample>
         </div>
       </div>
+      <PopUpToast
+        successSnackBarOpen={successSnackBarOpen}
+        setSuccessSnackBarOpen={setSuccessSnackBarOpen}
+        vertical="top"
+        horizontal="right"
+        severity={message.type}
+        message={message.message}
+      />
     </>
   );
 }
