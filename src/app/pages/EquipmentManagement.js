@@ -115,7 +115,7 @@ const useStyles6 = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     // width:150,
-    // padding:'8px 8px 8px 8px'
+    padding: '6px 12px 6px 12px',
 
   },
   

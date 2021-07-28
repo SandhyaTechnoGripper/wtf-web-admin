@@ -26,7 +26,51 @@ import PopUpToast from "../../_metronic/layout/components/PopUpToast/PopUpToast"
 const useStyles3 = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
+    backgroundColor: '#FF0000',
+    color: '#FFFFFF',
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width:177,
+
   },
+  menu: {
+    width: 350,
+  },
+  input: {
+    display: "none",
+  },
+}));
+//edit button
+const useStyles5 = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+    backgroundColor: '#000000',
+    color: '#FFFFFF',
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    padding: '6px 12px 6px 12px',
+
+
+  },
+  menu: {
+    width: 350,
+  },
+  input: {
+    display: "none",
+  },
+}));
+//delete button
+const useStyles6 = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+    backgroundColor: '#FF0000',
+    color: '#FFFFFF',
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    // width:150,
+    padding: '6px 12px 6px 12px',
+  },
+  
   input: {
     display: "none",
   },
@@ -63,9 +107,12 @@ const useStyles2 = makeStyles((theme) => ({
 }));
 
 export default function GymManagement() {
-  // submit button
+  //submit button
   const classes3 = useStyles3();
-
+  //edit button
+  const classes5 = useStyles5();
+  //delete button
+  const classes6 = useStyles6();
   //view gym
   const classes4 = useStyles4();
   // add gym
@@ -411,7 +458,7 @@ export default function GymManagement() {
             }`}
             codeBlockHeight="400px"
           >
-            <div className="separator separator-dashed my-7"></div>
+            
             <form className={classes2.container} noValidate autoComplete="on">
               <TextField
                 id="outlined-name"
@@ -567,7 +614,7 @@ export default function GymManagement() {
               className={classes3.button}
               onClick={editModalOpen.open ? updateData : gymAdd}
             >
-              Submit
+              Save & Continue
             </Button>
           </KTCodeExample>
         </div>
@@ -589,6 +636,12 @@ export default function GymManagement() {
                     <TableCell align="right">State</TableCell>
                     <TableCell align="right">Pin</TableCell>
                     <TableCell align="right">Country</TableCell>
+                    <TableCell align="right">Latitude</TableCell>
+                    <TableCell align="right">Longitudet</TableCell>
+                    <TableCell align="right">Lease Agreement</TableCell>
+                    <TableCell align="right">Electricity Bill</TableCell>
+                    <TableCell align="right">Bank Statement</TableCell>
+                    
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -613,14 +666,14 @@ export default function GymManagement() {
                       <TableCell align="right">{row.bank_statement}</TableCell>
                       <Button
                         variant="contained"
-                        className={classes3.button}
+                        className={classes5.button}
                         onClick={() => getParticularGym(row.uid)}
                       >
                         Edit
                       </Button>
                       <Button
                         variant="contained"
-                        className={classes3.button}
+                        className={classes6.button}
                         onClick={() => deleteData(row.uid)}
                       >
                         Delete

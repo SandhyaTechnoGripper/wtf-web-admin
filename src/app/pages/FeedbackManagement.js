@@ -21,16 +21,26 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import PopUpToast from "../../_metronic/layout/components/PopUpToast/PopUpToast";
 
-// const currencies = [
-//   {
-//     value: "Active",
-//     label: "Active",
-//   },
-//   {
-//     value: "Inactive",
-//     label: "Inactive",
-//   },
-// ];
+
+// submit button
+const useStyles1 = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+    backgroundColor: '#FF0000',
+    color: '#FFFFFF',
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width:200,
+
+  },
+  menu: {
+    width: 350,
+  },
+  input: {
+    display: "none",
+  },
+}));
+
 // update equipment
 const useStyles3 = makeStyles((theme) => ({
   container: {
@@ -92,6 +102,9 @@ export default function FeedbackManagement() {
   const classes4 = useStyles4();
   // add equipment
   const classes2 = useStyles2();
+  //submit button
+  const classes1 = useStyles1();
+  
 
   const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(false);
@@ -280,10 +293,10 @@ export default function FeedbackManagement() {
 
               <Button
                 variant="contained"
-                className={classes3.button}
+                className={classes1.button}
                 onClick={feedbackAdd}
               >
-                Submit
+                Save & countinue
               </Button>
             </form>
           </KTCodeExample>
@@ -299,10 +312,10 @@ export default function FeedbackManagement() {
               <Table className={classes4.table}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>GYM Name</TableCell>
-                    <TableCell align="right">Status</TableCell>
-                    <TableCell align="right">Description</TableCell>
-                    <TableCell align="right">Image</TableCell>
+                    <TableCell align="left">GYM Name</TableCell>
+                    <TableCell align="left">Status</TableCell>
+                    <TableCell align="left">Description</TableCell>
+                    <TableCell align="left">Image</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -311,9 +324,9 @@ export default function FeedbackManagement() {
                       <TableCell component="th" scope="row">
                         {row.gym_id}
                       </TableCell>
-                      <TableCell align="right">{row.status}</TableCell>
-                      <TableCell align="right">{row.description}</TableCell>
-                      <TableCell align="right">{row.image}</TableCell>
+                      <TableCell align="left">{row.status}</TableCell>
+                      <TableCell align="left">{row.description}</TableCell>
+                      <TableCell align="left">{row.image}</TableCell>
                       
                     </TableRow>
                   ))}

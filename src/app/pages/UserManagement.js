@@ -49,9 +49,6 @@ const useStyles5 = makeStyles((theme) => ({
     color: '#FFFFFF',
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    padding: '6px 12px 6px 12px',
-
-
   },
   menu: {
     width: 350,
@@ -68,9 +65,7 @@ const useStyles6 = makeStyles((theme) => ({
     color: '#FFFFFF',
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    // width:150,
-    // padding:'8px 8px 8px 8px'
-
+    
   },
   
   input: {
@@ -138,8 +133,7 @@ export default function UserManagement() {
   //dropdown
   const classes7 = useStyles7();
 
-
-
+  const account = ["id","Admin","Gym_Admin","Member","Trainer"]
   const classes2 = useStyles2();
   const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
   const [message, setMessage] = useState({
@@ -386,25 +380,35 @@ export default function UserManagement() {
                 className={classes2.textField}
                 value={values.name}
                 onChange={handleChange("name")}
-                SelectProps={{
-                  MenuProps: {
-                    className: classes7.menu,
-                  },
-                }}
                 margin="normal"
                 variant="outlined"
               />
-
+             
               <TextField
-                id="outlined-error"
+                id="outlined-select-currency"
+                select
                 label="Account Type"
                 value={values.account_type}
                 className={classes2.textField}
                 onChange={handleChange("account_type")}
+                SelectProps={{
+                  MenuProps: {
+                    className: classes2.menu,
+                  },
+                }}
                 margin="normal"
                 variant="outlined"
-              />
+              >
+                {account.map((option,id)=>(
+                <MenuItem key={id} 
+                value={option.Admin}>
+                {option.Gym_Admin}
+                {option.Member}
+                {option.Trainer}
 
+              </MenuItem>
+              ))}
+              </TextField>
               <TextField
                 id="outlined-email-input"
                 label="Email"

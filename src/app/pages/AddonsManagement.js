@@ -85,7 +85,40 @@ const useStyles2 = makeStyles((theme) => ({
     width: 200,
   },
 }));
+//edit button
+const useStyles5 = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+    backgroundColor: '#000000',
+    color: '#FFFFFF',
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    padding: '6px 12px 6px 12px',
 
+
+  },
+  menu: {
+    width: 350,
+  },
+  input: {
+    display: "none",
+  },
+}));
+//delete button
+const useStyles6 = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+    backgroundColor: '#FF0000',
+    color: '#FFFFFF',
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    padding: '6px 12px 6px 12px',
+  },
+  
+  input: {
+    display: "none",
+  },
+}));
 export default function AddonsManagement() {
   const { authToken } = useSelector(
     ({ auth }) => ({
@@ -101,6 +134,11 @@ export default function AddonsManagement() {
   const classes2 = useStyles2();
   //submit button
   const classes1 = useStyles1();
+  //edit button 
+  const classes5 = useStyles5();
+  //delete button
+  const classes6 = useStyles6();
+
 
   const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(false);
@@ -465,14 +503,14 @@ export default function AddonsManagement() {
                       <TableCell align="left">
                         <Button
                           variant="contained"
-                          className={classes3.button}
+                          className={classes5.button}
                           onClick={() => getParticularAddon(row.uid)}
                         >
                           Edit
                         </Button>
                         <Button
                           variant="contained"
-                          className={classes3.button}
+                          className={classes6.button}
                           onClick={() => deleteData(row.uid)}
                         >
                           Delete
