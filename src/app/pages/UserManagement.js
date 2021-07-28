@@ -49,6 +49,8 @@ const useStyles5 = makeStyles((theme) => ({
     color: '#FFFFFF',
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
+    padding: '6px 12px 6px 12px',
+
 
   },
   menu: {
@@ -66,6 +68,8 @@ const useStyles6 = makeStyles((theme) => ({
     color: '#FFFFFF',
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
+    // width:150,
+    // padding:'8px 8px 8px 8px'
 
   },
   
@@ -73,6 +77,24 @@ const useStyles6 = makeStyles((theme) => ({
     display: "none",
   },
 }));
+//dropdown
+const useStyles7 = makeStyles((theme) => ({
+  container: {
+    display: "flex",
+    flexWrap: "wrap",
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+  },
+  dense: {
+    marginTop: theme.spacing(2),
+  },
+  menu: {
+    width: 200,
+  },
+}));
+
 //view user
 const useStyles4 = makeStyles((theme) => ({
   root: {
@@ -113,6 +135,8 @@ export default function UserManagement() {
   const classes5 = useStyles5();
   //delete button
   const classes6 = useStyles6();
+  //dropdown
+  const classes7 = useStyles7();
 
 
 
@@ -354,10 +378,7 @@ export default function UserManagement() {
             }`}
             codeBlockHeight="400px"
           >
-            {/* <span>
-              <code>TextField</code> supports outlined styling.
-            </span> */}
-            {/* <div className="separator separator-dashed my-7"></div> */}
+            
             <form className={classes2.container} noValidate autoComplete="off">
               <TextField
                 id="outlined-name"
@@ -365,6 +386,11 @@ export default function UserManagement() {
                 className={classes2.textField}
                 value={values.name}
                 onChange={handleChange("name")}
+                SelectProps={{
+                  MenuProps: {
+                    className: classes7.menu,
+                  },
+                }}
                 margin="normal"
                 variant="outlined"
               />
@@ -434,25 +460,26 @@ export default function UserManagement() {
               <Table className={classes4.table}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>User Details</TableCell>
-                    <TableCell align="right">Account type</TableCell>
-                    <TableCell align="right">Last Login</TableCell>
-                    <TableCell align="right">Status</TableCell>
-                    <TableCell align="center">Action</TableCell>
+                    <TableCell align="left">User Details</TableCell>
+                    <TableCell align="left">Account type</TableCell>
+                    <TableCell align="left">Last Login</TableCell>
+                    <TableCell align="left">Status</TableCell>
+                    <TableCell align="left">Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {getData?.map((row) => (
                     <TableRow key={row.uid}>
-                      <TableCell component="th" scope="row">
-                        {row.name} |{row.email}| {row.mobile}
+                      <TableCell align="left" component="th" scope="row">
+                        {row.name} | {row.email} | {row.mobile}
                       </TableCell>
-                      <TableCell align="right">{row.account_type}</TableCell>
-                      <TableCell align="right">{row.last_ip} | {row.date_added}</TableCell>
-                      <TableCell align="right">{row.status}</TableCell>
-                      <TableCell allign="right">
+                      <TableCell align="left">{row.account_type}</TableCell>
+                      <TableCell align="left">{row.last_ip} | {row.date_added}</TableCell>
+                      <TableCell align="left">{row.status}</TableCell>
+                      <TableCell allign="left">
                         <Button
                           variant="contained"
+                          fullWidth
                           className={classes5.button}
                           onClick={() => getParticularUser(row.uid)}
                         >
@@ -460,6 +487,7 @@ export default function UserManagement() {
                         </Button>
                         <Button
                           variant="contained"
+                          fullWidth
                           className={classes6.button}
                           onClick={() => deleteData(row.uid)}
                         >

@@ -314,9 +314,7 @@ export default function EquipmentManagement() {
             }`}
             codeBlockHeight="400px"
           >
-            <span>
-              <code>TextField</code> supports outlined styling.
-            </span>
+           
             <div className="separator separator-dashed my-7"></div>
             <form className={classes2.container} noValidate autoComplete="off">
               <TextField
