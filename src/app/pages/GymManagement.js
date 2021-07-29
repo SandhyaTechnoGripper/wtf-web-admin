@@ -641,6 +641,7 @@ export default function GymManagement() {
                     <TableCell align="right">Lease Agreement</TableCell>
                     <TableCell align="right">Electricity Bill</TableCell>
                     <TableCell align="right">Bank Statement</TableCell>
+                    <TableCell align="right">Action</TableCell>
                     
                   </TableRow>
                 </TableHead>

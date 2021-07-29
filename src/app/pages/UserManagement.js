@@ -388,7 +388,7 @@ export default function UserManagement() {
                 id="outlined-select-currency"
                 select
                 label="Account Type"
-                value={values.account_type}
+                // value={values.account_type}
                 className={classes2.textField}
                 onChange={handleChange("account_type")}
                 SelectProps={{
